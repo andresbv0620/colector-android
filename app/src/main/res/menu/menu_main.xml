@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/mapa_vista" android:title="@string/mapa_vista"></item>
+    <item android:id="@+id/lista_vista" android:title="@string/lista_vista"></item>
+    <item android:id="@+id/buscar_registros" android:title="@string/buscar_registros"></item>
+    <item android:id="@+id/configuracion" android:title="@string/ajustes_configuracion"></item>
+</menu>

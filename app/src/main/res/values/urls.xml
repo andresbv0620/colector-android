@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="url_login">http://ww2.perast.cl/api/v1/auth</string>
+    <string name="url_empresas">http://ww2.perast.cl/api/v1/sistemas</string>
+    <string name="url_catalogos">http://ww2.perast.cl/api/v1/catalogos</string>
+</resources>
