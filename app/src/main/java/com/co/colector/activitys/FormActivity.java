@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.co.colector.MapsActivity;
 import com.co.colector.R;
+import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.model.Catalog;
 import com.co.colector.model.Entry;
 import com.co.colector.model.Tab;
@@ -31,6 +32,7 @@ import com.co.colector.utils.ColectorConstants;
 import com.co.colector.utils.OperationWsCall;
 
 import java.io.File;
+import java.text.Normalizer;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +59,13 @@ public class FormActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_form);
 
+        ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                storeForm();
+            }
+        });
+
         networkCalls = new NetworkCalls(this);
         if (ColectorConstants.catalogArrayList == null) {
             progressDialog = ProgressDialog.show(this,
@@ -72,8 +81,44 @@ public class FormActivity extends Activity {
             });
         }
         else init(ColectorConstants.catalogArrayList);
+    }
 
+    public void exitFormAlert(){
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage(R.string.back)
+                .setPositiveButton("Descartar", new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        startActivity(new Intent(FormActivity.this, BaseActivity.class));
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    public void storeForm(){
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Guardar")
+                .setMessage(R.string.fin)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        DatabaseHelper.insertRegistro("User",String.valueOf(System.currentTimeMillis()));
+                        startActivity(new Intent(FormActivity.this, BaseActivity.class));
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     public void init(ArrayList<Catalog> catalogArrayList){
@@ -243,9 +288,7 @@ public class FormActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, BaseActivity.class));
-        finish();
+        exitFormAlert();
     }
 
     @Override

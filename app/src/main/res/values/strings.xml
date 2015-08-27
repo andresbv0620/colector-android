@@ -22,4 +22,8 @@
 
     <string name="config">Configurar la ubicación</string>
 
+    <string name="back">Existen cambios no guardados en este formulario. ¿Quiere descartarlos?</string>
+
+    <string name="fin">Desea guardar el formulario?</string>
+
 </resources>

@@ -1,10 +1,13 @@
 package com.co.colector.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.co.colector.R;
@@ -53,6 +56,29 @@ public class RegistryMenuAdapter extends BaseAdapter {
 
         TextView labSubTitle = (TextView) view
                 .findViewById(R.id.textViewTiempoActualizacion);
+
+        final ImageButton imageButton = (ImageButton) view.findViewById(R.id.imageButtonActualizar);
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final ProgressDialog progressDialog = new ProgressDialog(mContext);
+                progressDialog.setTitle("Updating");
+                progressDialog.setMessage(mContext.getResources().getString(R.string.please_take_a_moment));
+                progressDialog.setIndeterminate(true);
+
+                    progressDialog.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                            imageButton.setImageResource(R.drawable.btn_check_verde);
+                        }
+                    }, 2000);
+            }
+        });
 
         Registry registry = registryArrayList.get(position);
 
