@@ -18,5 +18,8 @@
     <string name="ajustes_configuracion">Ajustes/Configuración</string>
 
     <string name="no_registros">No hay registros disponibles aun,\npara este formulario</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="config">Configurar la ubicación</string>
 
 </resources>

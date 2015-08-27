@@ -1,6 +1,5 @@
 package com.co.colector.activitys;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -16,14 +15,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.co.colector.MapsActivity;
 import com.co.colector.R;
 import com.co.colector.model.Catalog;
 import com.co.colector.model.Entry;
@@ -79,6 +77,13 @@ public class FormActivity extends Activity {
     }
 
     public void init(ArrayList<Catalog> catalogArrayList){
+
+        ((ImageButton) findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(FormActivity.this,MapsActivity.class));
+            }
+        });
 
         this.catalogArrayList = catalogArrayList;
         ColectorConstants.catalogSelected = catalogArrayList.get(ColectorConstants.indexCatalogSelected);
