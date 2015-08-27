@@ -22,8 +22,11 @@
             android:name=".activitys.MainActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".activitys.ErrorLoginActivity"
@@ -34,15 +37,10 @@
         </activity>
 
         <activity android:name=".activitys.SurfaceViewCameraActivity">
-
         </activity>
 
         <activity android:name=".activitys.FormActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>
