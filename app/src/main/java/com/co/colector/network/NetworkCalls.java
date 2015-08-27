@@ -13,6 +13,7 @@ import com.co.colector.R;
 import com.co.colector.VolleySingleton;
 import com.co.colector.activitys.BaseActivity;
 import com.co.colector.activitys.FormActivity;
+import com.co.colector.activitys.ListFormsActivity;
 import com.co.colector.activitys.MainActivity;
 import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.model.Catalog;
@@ -140,10 +141,14 @@ public class NetworkCalls {
                             }
                         }
 
-                        if (parentActivity != OperationWsCall.MENU_ACTIVITY)
+                        ColectorConstants.catalogArrayList = catalogs;
+
+                        if (parentActivity == OperationWsCall.FORM_ACTIVITY)
                             ((FormActivity) mContext).init(catalogs);
-                        else
+                        else if (parentActivity == OperationWsCall.MENU_ACTIVITY)
                             ((BaseActivity) mContext).init(catalogs);
+                        else if (parentActivity == OperationWsCall.LIST_FORMS_ACTIVITY)
+                            ((ListFormsActivity) mContext).init(catalogs);
 
                     }
                 } catch (JSONException e) {

@@ -2,6 +2,8 @@ package com.co.colector.utils;
 
 import com.co.colector.model.Catalog;
 
+import java.util.ArrayList;
+
 /**
  * Created by User on 24/08/2015.
  */
@@ -33,5 +35,6 @@ public class ColectorConstants {
     public static Catalog catalogSelected = null;
     public static String username = "";
     public static String password = "";
-
+    public static ArrayList<Catalog> catalogArrayList;
+    public static int indexCatalogSelected = 0;
 }

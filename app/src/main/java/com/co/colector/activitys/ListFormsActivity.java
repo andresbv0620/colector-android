@@ -1,7 +1,6 @@
 package com.co.colector.activitys;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,21 +12,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+
 import com.co.colector.R;
 import com.co.colector.adapters.DrawerMenuAdapterList;
-import com.co.colector.fragments.FragmentForm;
+import com.co.colector.fragments.FragmentFormsList;
 import com.co.colector.fragments.FragmentInitialMenu;
 import com.co.colector.interfaces.BaseMethodsActivity;
 import com.co.colector.model.Catalog;
 import com.co.colector.network.NetworkCalls;
 import com.co.colector.utils.ColectorConstants;
 import com.co.colector.utils.OperationWsCall;
+
 import java.util.ArrayList;
 
 /**
- * Created by User on 24/08/2015.
+ * Created by User on 27/08/2015.
  */
-public class BaseActivity extends FragmentActivity implements BaseMethodsActivity, PopupMenu.OnMenuItemClickListener{
+public class ListFormsActivity extends FragmentActivity implements BaseMethodsActivity, PopupMenu.OnMenuItemClickListener{
 
     private DrawerLayout mDrawerLayout;
     private FragmentTransaction fragmentTransaction;
@@ -38,12 +39,10 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_base);
         catalogArrayList = new ArrayList<Catalog>();
-        networkCalls = new NetworkCalls(this);
-
         if (ColectorConstants.catalogArrayList == null) {
+            networkCalls = new NetworkCalls(this);
             progressDialog = ProgressDialog.show(this,
                     getString(R.string.downloading_title),
                     getString(R.string.please_take_a_moment),
@@ -52,7 +51,7 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    networkCalls.makeWsCall(OperationWsCall.FORMS_CALL, OperationWsCall.MENU_ACTIVITY);
+                    networkCalls.makeWsCall(OperationWsCall.FORMS_CALL, OperationWsCall.LIST_FORMS_ACTIVITY);
                 }
             });
         }
@@ -73,7 +72,7 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         networkCalls = new NetworkCalls(this);
         buildMenu((ListView) findViewById(R.id.listViewMenu));
-        makeTransaction(new FragmentInitialMenu(), getSupportFragmentManager(), R.id.content_frame);
+        makeTransaction(new FragmentFormsList(), getSupportFragmentManager(), R.id.content_frame);
         try {
             progressDialog.hide();
         }catch (NullPointerException e){
@@ -89,10 +88,10 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
     private String[] getFormsTitles(){
         String[] titles = new String[catalogArrayList.size()];
         int i = 0;
-         for (Catalog c: catalogArrayList){
-             titles[i] = c.getCatalogTitle();
-             i++;
-         }
+        for (Catalog c: catalogArrayList){
+            titles[i] = c.getCatalogTitle();
+            i++;
+        }
         return titles;
     }
 
@@ -124,12 +123,5 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
                 return true;
         }
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, ListFormsActivity.class));
-        finish();
     }
 }

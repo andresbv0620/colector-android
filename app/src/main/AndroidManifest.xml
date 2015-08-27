@@ -36,10 +36,17 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".activitys.SurfaceViewCameraActivity">
+        <activity android:name=".activitys.SurfaceViewCameraActivity"
+            android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".activitys.FormActivity">
+        <activity android:name=".activitys.FormActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".activitys.ListFormsActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 

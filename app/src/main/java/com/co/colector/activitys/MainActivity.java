@@ -83,7 +83,8 @@ public class MainActivity extends Activity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 PreferencesHelper.insertIdSistema(enterpriseArrayList.get(position).getId());
-                startActivity(new Intent(MainActivity.this, BaseActivity.class));
+                startActivity(new Intent(MainActivity.this, ListFormsActivity.class));
+                finish();
             }
         });
     }

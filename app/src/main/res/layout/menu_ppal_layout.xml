@@ -54,7 +54,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -71,9 +71,21 @@
             android:gravity="center|top"
             android:textSize="20sp"
             android:paddingTop="20dp"
-
             android:visibility="gone"
             android:layout_margin="20dp"
             android:id="@+id/textViewNoForms" />
-    </LinearLayout>
+
+        <ImageButton
+            android:layout_width="65dp"
+            android:layout_height="70dp"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:src="@drawable/btn_plus"
+            android:id="@+id/imageButtonPlusRegistry"
+            android:layout_marginRight="23dp"
+            android:layout_marginEnd="23dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 </LinearLayout>

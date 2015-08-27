@@ -15,6 +15,11 @@ public class Registry {
         this.setUpdated(updated);
     }
 
+    public Registry(String name, String registryLabel){
+        this.setName(name);
+        this.setRegistryLabel(registryLabel);
+    }
+
 
     public String getName() {
         return name;

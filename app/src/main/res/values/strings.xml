@@ -17,4 +17,6 @@
     <string name="buscar_registros">Buscar registros</string>
     <string name="ajustes_configuracion">Ajustes/Configuración</string>
 
+    <string name="no_registros">No hay registros disponibles aun,\npara este formulario</string>
+
 </resources>

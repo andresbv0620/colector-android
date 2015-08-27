@@ -45,17 +45,20 @@ public class FormActivity extends Activity {
         setContentView(R.layout.fragment_form);
 
         networkCalls = new NetworkCalls(this);
-        progressDialog = ProgressDialog.show(this,
-                getString(R.string.downloading_title),
-                getString(R.string.please_take_a_moment),
-                true);
+        if (ColectorConstants.catalogArrayList == null) {
+            progressDialog = ProgressDialog.show(this,
+                    getString(R.string.downloading_title),
+                    getString(R.string.please_take_a_moment),
+                    true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                networkCalls.makeWsCall(OperationWsCall.FORMS_CALL, OperationWsCall.FORM_ACTIVITY);
-            }
-        });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    networkCalls.makeWsCall(OperationWsCall.FORMS_CALL, OperationWsCall.FORM_ACTIVITY);
+                }
+            });
+        }
+        else init(ColectorConstants.catalogArrayList);
 
 
     }
@@ -63,13 +66,17 @@ public class FormActivity extends Activity {
     public void init(ArrayList<Catalog> catalogArrayList){
 
         this.catalogArrayList = catalogArrayList;
-        ColectorConstants.catalogSelected = catalogArrayList.get(0);
+        ColectorConstants.catalogSelected = catalogArrayList.get(ColectorConstants.indexCatalogSelected);
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
 
         for (Tab t: tabsCatalog)
             prepareView((LinearLayout) findViewById(R.id.form),t);
 
-        progressDialog.hide();
+        try {
+            progressDialog.hide();
+        }catch (NullPointerException e){
+
+        }
     }
 
     private void prepareView(LinearLayout parent, Tab tab){
