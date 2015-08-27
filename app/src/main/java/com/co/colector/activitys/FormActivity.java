@@ -2,9 +2,11 @@ package com.co.colector.activitys;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -81,7 +85,7 @@ public class FormActivity extends Activity {
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
 
         for (Tab t: tabsCatalog)
-            prepareView((LinearLayout) findViewById(R.id.form),t);
+            prepareView((LinearLayout) findViewById(R.id.form), t);
 
         try {
             progressDialog.hide();
@@ -111,7 +115,7 @@ public class FormActivity extends Activity {
 
     }
 
-    private void addBottomLayouts(LinearLayout optionsLayout, Entry entry) {
+    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry) {
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.row_view, null);
@@ -134,16 +138,38 @@ public class FormActivity extends Activity {
                 mainLayout.addView(editText);
                 break;
 
-            case 3:
-            case 4: CheckBox[] radioButtons = new CheckBox[entry.getOptions().size()];
-                int i = 0;
-                for (String option: entry.getOptions()){
-                    radioButtons[i] = new CheckBox(this);
-                    radioButtons[i].setText(option);
-                    radioButtons[i].setPadding(10, 10, 10, 10);
-                    mainLayout.addView(radioButtons[i]);
-                    i++;
-                }
+            case 3: Button button = new Button(this);
+                    button.setPadding(10, 10, 10, 10);
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.LEFT;
+                button.setLayoutParams(params);
+                button.setText("Desplegar opciones");
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createBuilderTabs(entry.getOptions(),true);
+                    }
+                });
+                mainLayout.addView(button);
+                break;
+
+            case 4: Button secondButton = new Button(this);
+                    secondButton.setPadding(10, 10, 10, 10);
+
+                    LinearLayout.LayoutParams firsButtonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    firsButtonParams.gravity = Gravity.LEFT;
+                    secondButton.setLayoutParams(firsButtonParams);
+                    secondButton.setText("Desplegar opciones");
+
+                    secondButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            createBuilderTabs(entry.getOptions(),false);
+                        }
+                    });
+                    mainLayout.addView(secondButton);
                 break;
 
             case 5:
@@ -153,9 +179,9 @@ public class FormActivity extends Activity {
                 imageButton.setBackgroundResource(0);
                 imageButton.setPadding(10, 10, 10, 10);
 
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.gravity = Gravity.LEFT;
-                imageButton.setLayoutParams(params);
+                LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                buttonParams.gravity = Gravity.LEFT;
+                imageButton.setLayoutParams(buttonParams);
 
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -236,6 +262,42 @@ public class FormActivity extends Activity {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
+    public void createBuilderTabs(ArrayList<String> list, Boolean isSimpleChoice){
+
+        AlertDialog.Builder builderTabs;
+
+        DialogInterface.OnClickListener optionsDialogListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+
+        DialogInterface.OnMultiChoiceClickListener optionsMultpleDialogListener = new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+               if (which > 1) {
+                   dialog.dismiss();
+               }
+            }
+        };
+
+        boolean[] checkedOptions = new boolean[list.size()];
+        for(int i = 0; i < list.size(); i++)
+            checkedOptions[i] = false;
+
+        builderTabs = new AlertDialog.Builder(this);
+
+        builderTabs.setTitle("Seleccion de opciones");
+
+        final CharSequence[] charsOptions = list.toArray(new CharSequence[list.size()]);
+        if (isSimpleChoice)
+            builderTabs.setSingleChoiceItems(charsOptions , -1 , optionsDialogListener);
+        else
+            builderTabs.setMultiChoiceItems(charsOptions , checkedOptions , optionsMultpleDialogListener);
+        AlertDialog dialog = builderTabs.create();
+        dialog.show();
+    }
 
     private File getOutputMediaFile(int type){
 
