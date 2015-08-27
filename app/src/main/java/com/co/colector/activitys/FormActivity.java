@@ -1,11 +1,16 @@
 package com.co.colector.activitys;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,6 +28,8 @@ import com.co.colector.network.NetworkCalls;
 import com.co.colector.utils.ColectorConstants;
 import com.co.colector.utils.OperationWsCall;
 
+import java.io.File;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +45,10 @@ public class FormActivity extends Activity {
     private ArrayList<Catalog> catalogArrayList;
     private NetworkCalls networkCalls;
     private ProgressDialog progressDialog;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    private Uri fileUri;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +105,7 @@ public class FormActivity extends Activity {
         entriesTab = tab.getEntries();
 
         for (Entry e: entriesTab)
-            addBottomLayouts(optionsLayout,e);
+            addBottomLayouts(optionsLayout, e);
 
         parent.addView(view);
 
@@ -138,12 +149,18 @@ public class FormActivity extends Activity {
             case 5:
                 ImageButton imageButton = new ImageButton(this);
                 imageButton.setClickable(true);
-                imageButton.setImageResource(android.R.drawable.ic_input_add);
+                imageButton.setImageResource(R.drawable.btn_plus_photo);
+                imageButton.setBackgroundResource(0);
                 imageButton.setPadding(10, 10, 10, 10);
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.LEFT;
+                imageButton.setLayoutParams(params);
+
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(FormActivity.this, SurfaceViewCameraActivity.class));
+        openCamera();
                     }
                 });
                 mainLayout.addView(imageButton);
@@ -203,5 +220,54 @@ public class FormActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void openCamera(){
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    private Uri getOutputMediaFileUri(int type){
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+
+    private File getOutputMediaFile(int type){
+
+        String di = "";
+
+        if (type == MEDIA_TYPE_IMAGE){
+            di = Environment.getExternalStorageDirectory()+"/Colector/Images";
+        }
+
+        File mediaStorageDir = new File(di);
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+
+        if (type == MEDIA_TYPE_IMAGE){
+
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
+
+        } else if(type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "VID_"+ timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
     }
 }
