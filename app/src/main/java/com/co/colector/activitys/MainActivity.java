@@ -58,7 +58,7 @@ public class MainActivity extends Activity{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                networkCalls.makeWsCall(OperationWsCall.ENTERPRISE_CALL);
+                networkCalls.makeWsCall(OperationWsCall.ENTERPRISE_CALL,null);
             }
         });
     }
@@ -119,7 +119,7 @@ public class MainActivity extends Activity{
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            networkCalls.makeWsCall(OperationWsCall.LOGIN);
+                            networkCalls.makeWsCall(OperationWsCall.LOGIN,null);
                         }
                     });
                 }

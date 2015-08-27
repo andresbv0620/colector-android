@@ -12,6 +12,7 @@ import com.co.colector.ColectorApplication;
 import com.co.colector.R;
 import com.co.colector.VolleySingleton;
 import com.co.colector.activitys.BaseActivity;
+import com.co.colector.activitys.FormActivity;
 import com.co.colector.activitys.MainActivity;
 import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.model.Catalog;
@@ -45,7 +46,7 @@ public class NetworkCalls {
         this.mContext = mContext;
     }
 
-    public void makeWsCall(final OperationWsCall operation){
+    public void makeWsCall(final OperationWsCall operation, final OperationWsCall parentActivity){
 
         switch (operation){
             case LOGIN: url = ColectorApplication.getInstance().getResources().getString(R.string.url_login); break;
@@ -139,7 +140,10 @@ public class NetworkCalls {
                             }
                         }
 
-                        ((BaseActivity) mContext).init(catalogs);
+                        if (parentActivity != OperationWsCall.MENU_ACTIVITY)
+                            ((FormActivity) mContext).init(catalogs);
+                        else
+                            ((BaseActivity) mContext).init(catalogs);
 
                     }
                 } catch (JSONException e) {

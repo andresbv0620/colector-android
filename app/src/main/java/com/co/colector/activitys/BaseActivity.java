@@ -15,6 +15,7 @@ import android.widget.PopupMenu;
 import com.co.colector.R;
 import com.co.colector.adapters.DrawerMenuAdapterList;
 import com.co.colector.fragments.FragmentForm;
+import com.co.colector.fragments.FragmentInitialMenu;
 import com.co.colector.interfaces.BaseMethodsActivity;
 import com.co.colector.model.Catalog;
 import com.co.colector.network.NetworkCalls;
@@ -47,7 +48,7 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                networkCalls.makeWsCall(OperationWsCall.FORMS_CALL);
+                networkCalls.makeWsCall(OperationWsCall.FORMS_CALL, OperationWsCall.MENU_ACTIVITY);
             }
         });
     }
@@ -66,7 +67,7 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         networkCalls = new NetworkCalls(this);
         buildMenu((ListView) findViewById(R.id.listViewMenu));
-        makeTransaction(new FragmentForm(), getSupportFragmentManager(), R.id.content_frame);
+        makeTransaction(new FragmentInitialMenu(), getSupportFragmentManager(), R.id.content_frame);
         progressDialog.hide();
     }
 
