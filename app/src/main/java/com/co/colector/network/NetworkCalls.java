@@ -15,6 +15,7 @@ import com.co.colector.activitys.BaseActivity;
 import com.co.colector.activitys.FormActivity;
 import com.co.colector.activitys.ListFormsActivity;
 import com.co.colector.activitys.MainActivity;
+import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.model.Catalog;
 import com.co.colector.model.Enterprise;
@@ -70,17 +71,28 @@ public class NetworkCalls {
                         jsonArray = jsonObject.getJSONArray(ColectorConstants.sistemasTag);
 
                         for (int i = 0; i < jsonArray.length(); i++){
+
                             JSONObject joInside = jsonArray.getJSONObject(i);
+
                             ((MainActivity) mContext).addEnterprise(new Enterprise(
                                     joInside.getInt(ColectorConstants.sistemaIdJsonTag),
                                     joInside.getString(ColectorConstants.nombreSistemaJsonTag),
                                     joInside.getString(ColectorConstants.descripcionSistemaJsonTag)));
+
+                            DatabaseHelper.insertEmpresa(new Enterprise(
+                                    joInside.getInt(ColectorConstants.sistemaIdJsonTag),
+                                    joInside.getString(ColectorConstants.nombreSistemaJsonTag),
+                                    joInside.getString(ColectorConstants.descripcionSistemaJsonTag),
+                                    String.valueOf(joInside.getInt(ColectorConstants.sistemaIdJsonTag)),
+                                    joInside.getString(ColectorConstants.dbSistemaJsonTag)));
+
                         }
 
                         ((MainActivity) mContext).hideDialog();
                         ((MainActivity) mContext).showEnterpriseDialog();
                     }
                     else if (operation == OperationWsCall.FORMS_CALL){
+
                         ColectorConstants.catalogSelected = null;
                         jsonArray = jsonObject.getJSONArray(ColectorConstants.catalogosJsonTag);
                         catalogs = new ArrayList<Catalog>();
@@ -97,8 +109,16 @@ public class NetworkCalls {
                                         Catalog catalogInsert;
 
                                         JSONObject jsonObjectCatalogoInside = catalogosInside.getJSONObject(j);
+
                                         catalogInsert = new Catalog(jsonObjectCatalogoInside.getString(ColectorConstants.catalogoNombreJsonTag),
-                                                                    jsonObjectCatalogoInside.getString(ColectorConstants.catalogoDescripcionJsonTag));
+                                                                    jsonObjectCatalogoInside.getString(ColectorConstants.catalogoDescripcionJsonTag),
+                                                                    String.valueOf(jsonObjectCatalogoInside.getInt(ColectorConstants.catalogoIdJsonTag)),
+                                                                    String.valueOf(jsonObjectCatalogoInside.getInt(ColectorConstants.grupoEntradaJsonTag)));
+
+
+                                        DatabaseHelper.insertCatalogo(catalogInsert);
+                                        String catalogId = String.valueOf(jsonObjectCatalogoInside.getInt(ColectorConstants.catalogoIdJsonTag));
+
 
                                         JSONArray jsonArrayTabs = jsonObjectCatalogoInside.getJSONArray(ColectorConstants.tabsJsonTag);
 
@@ -108,6 +128,13 @@ public class NetworkCalls {
 
                                                 Tab tabInsert = new Tab(jsonObjectTabsInside.getString(ColectorConstants.tabNombreJsonTag),
                                                                         jsonObjectTabsInside.getString(ColectorConstants.tabDescripcionJsonTag));
+
+                                                tabInsert.setCatalogId(catalogId);
+                                                tabInsert.setTabId(String.valueOf(jsonObjectTabsInside.getInt(ColectorConstants.tabIdJsonTag)));
+
+                                                DatabaseHelper.insertTab(tabInsert);
+
+                                                String tabId = jsonObjectTabsInside.getString(ColectorConstants.tabIdJsonTag);
 
                                                 JSONArray jsonArrayEntries = jsonObjectTabsInside.getJSONArray(ColectorConstants.entradasJsonTag);
 
@@ -120,6 +147,9 @@ public class NetworkCalls {
                                                                 jsonObjectEntry.getInt(ColectorConstants.entradaObligatorioJsonTag));
 
 
+                                                        entryInsert.setTabId(tabId);
+                                                        entryInsert.setEntryId(String.valueOf(jsonObjectEntry.getInt(ColectorConstants.entradaIdJsonTag)));
+
                                                         JSONArray optionsEntry = jsonObjectEntry.getJSONArray(ColectorConstants.optionsJsonTag);
 
                                                          if (optionsEntry.length() != 0){
@@ -130,6 +160,7 @@ public class NetworkCalls {
                                                          }
 
                                                         tabInsert.getEntries().add(entryInsert);
+                                                        DatabaseHelper.insertEntry(entryInsert);
 
                                                     }
 

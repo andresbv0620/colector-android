@@ -4,8 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.co.colector.R;
-import com.co.colector.utils.MyCurrentLoctionListener;
+import com.co.colector.utils.LoctionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -15,13 +14,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private MyCurrentLoctionListener locationListener;
+    private LoctionListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        locationListener = new MyCurrentLoctionListener(this);
+        locationListener = new LoctionListener(this);
         ((TextView) findViewById(R.id.textView6)).setText(locationListener.getLocation().getLatitude()+ ","+locationListener.getLocation().getLongitude());
         setUpMapIfNeeded();
     }

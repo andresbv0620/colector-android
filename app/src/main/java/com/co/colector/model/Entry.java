@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 public class Entry {
 
+    private String entryId;
+    private String tabId;
     private String labelTitle;
     private int typeEntry;
     private int mandatoryEntry;
@@ -49,5 +51,21 @@ public class Entry {
 
     public void setOptions(ArrayList<String> options) {
         this.options = options;
+    }
+
+    public String getEntryId() {
+        return entryId;
+    }
+
+    public void setEntryId(String entryId) {
+        this.entryId = entryId;
+    }
+
+    public String getTabId() {
+        return tabId;
+    }
+
+    public void setTabId(String tabId) {
+        this.tabId = tabId;
     }
 }

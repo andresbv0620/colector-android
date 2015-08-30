@@ -5,8 +5,16 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.co.colector.ColectorApplication;
 import com.co.colector.database.SQLiteDB;
+import com.co.colector.database.catalogo;
+import com.co.colector.database.empresa;
+import com.co.colector.database.entrada;
 import com.co.colector.database.registros;
+import com.co.colector.database.tab;
+import com.co.colector.model.Catalog;
+import com.co.colector.model.Enterprise;
+import com.co.colector.model.Entry;
 import com.co.colector.model.Registry;
+import com.co.colector.model.Tab;
 
 import java.util.ArrayList;
 
@@ -18,6 +26,10 @@ public class DatabaseHelper {
     private static SQLiteDB sqLiteDB;
     private static SQLiteDatabase sqLiteDatabase;
     private static registros registrosTable;
+    private static empresa empresaTable;
+    private static catalogo catalogoTable;
+    private static entrada entradaTable;
+    private static tab tabTable;
     private static Cursor cursor;
     private static ArrayList<Registry> registryArrayList;
 
@@ -38,6 +50,34 @@ public class DatabaseHelper {
         initializeWriteableDatabase();
         registrosTable = new registros();
         registrosTable.insert(sqLiteDatabase,nombre,registros);
+    }
+
+    public static void insertEmpresa(Enterprise enterprise){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        empresaTable = new empresa();
+        empresaTable.insert(sqLiteDatabase,enterprise.getName(),enterprise.getSystem_id(), enterprise.getDescriptionEnterprise(), enterprise.getDb_system());
+    }
+
+    public static void insertTab(Tab tab){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        tabTable = new tab();
+        tabTable.insert(sqLiteDatabase,tab.getTabId(), tab.getCatalogId());
+    }
+
+    public static void insertCatalogo(Catalog catalog){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        catalogoTable = new catalogo();
+        catalogoTable.insert(sqLiteDatabase,catalog.getCatalogTitle(),catalog.getCatalogId(), catalog.getCatalogDescription(), catalog.getGrupoEntrada());
+    }
+
+    public static void insertEntry(Entry entry){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        entradaTable = new entrada();
+        entradaTable.insert(sqLiteDatabase,entry.getEntryId(),entry.getTabId());
     }
 
     public static void updateRegistro(String id){

@@ -7,7 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MyCurrentLoctionListener implements LocationListener{
+public class LoctionListener implements LocationListener{
 
 	private final Context mContext;
 	 
@@ -33,7 +33,7 @@ public class MyCurrentLoctionListener implements LocationListener{
     // Declaring a Location Manager
     protected LocationManager locationManager;
  
-    public MyCurrentLoctionListener(Context context) {
+    public LoctionListener(Context context) {
         this.mContext = context;
         getLocation();
     }

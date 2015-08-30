@@ -8,11 +8,15 @@ import java.util.ArrayList;
 public class Catalog {
     private String catalogTitle;
     private String catalogDescription;
+    private String catalogId;
+    private String grupoEntrada;
     private ArrayList<Tab> tabs;
 
-    public Catalog(String catalogTitle, String catalogDescription){
+    public Catalog(String catalogTitle, String catalogDescription, String catalogId, String grupoEntrada){
         this.setCatalogTitle(catalogTitle);
         this.setCatalogDescription(catalogDescription);
+        this.setCatalogId(catalogId);
+        this.setGrupoEntrada(grupoEntrada);
         this.tabs = new ArrayList<Tab>();
     }
 
@@ -38,5 +42,21 @@ public class Catalog {
 
     public void setTabs(ArrayList<Tab> tabs) {
         this.tabs = tabs;
+    }
+
+    public String getCatalogId() {
+        return catalogId;
+    }
+
+    public void setCatalogId(String catalogId) {
+        this.catalogId = catalogId;
+    }
+
+    public String getGrupoEntrada() {
+        return grupoEntrada;
+    }
+
+    public void setGrupoEntrada(String grupoEntrada) {
+        this.grupoEntrada = grupoEntrada;
     }
 }

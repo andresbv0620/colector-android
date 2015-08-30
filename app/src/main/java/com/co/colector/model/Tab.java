@@ -9,6 +9,8 @@ public class Tab {
 
     private String titleTab;
     private String descriptionTab;
+    private String tabId;
+    private String catalogId;
     private ArrayList<Entry> entries;
 
     public Tab(String titleTab, String descriptionTab){
@@ -39,5 +41,21 @@ public class Tab {
 
     public void setTitleTab(String titleTab) {
         this.titleTab = titleTab;
+    }
+
+    public String getTabId() {
+        return tabId;
+    }
+
+    public void setTabId(String tabId) {
+        this.tabId = tabId;
+    }
+
+    public String getCatalogId() {
+        return catalogId;
+    }
+
+    public void setCatalogId(String catalogId) {
+        this.catalogId = catalogId;
     }
 }
