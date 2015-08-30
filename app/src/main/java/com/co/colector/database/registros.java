@@ -12,20 +12,36 @@ public class registros {
 
     public static final String TABLE_NAME = "registros";
     public static final String ID = "id";
-    public static final String NOMBRE = "nombre";
-    public static final String REGISTRO = "registro";
-    public static final String ACTUALIZADO = "actualizado";
+    public static final String CATALOGO_ID = "catalogoId";
+    public static final String SISTEMA_DB = "dbSistema";
+    public static final String SISTEMA_ID = "sistemaId";
+    public static final String TABLET_ID = "tablet_id";
+    public static final String GRUPO_ENTRADA = "grupoEntrada";
+    public static final String TAB_ID = "tabId";
+    public static final String RESPUESTA = "respuesta";
+    public static final String USUARIO_ID = "usuarioId";
+    public static final String ENTRADA_ID = "entradaId";
     private ContentValues cv;
 
     public registros(){
 
     }
 
-    public void insert(SQLiteDatabase db, String nombre, String registro){
+    public void insert(SQLiteDatabase db, String catalogoId, String dbSistema, String sistemaId,
+                       String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId){
+
         cv = new ContentValues();
-        cv.put(NOMBRE, nombre);
-        cv.put(REGISTRO, registro);
-        cv.put(ACTUALIZADO,"0");
+
+        cv.put(CATALOGO_ID, catalogoId);
+        cv.put(SISTEMA_DB, dbSistema);
+        cv.put(SISTEMA_ID, sistemaId);
+        cv.put(TABLET_ID, tabletId);
+        cv.put(GRUPO_ENTRADA, grupoEntrada);
+        cv.put(TAB_ID, tabId);
+        cv.put(RESPUESTA, respuesta);
+        cv.put(USUARIO_ID, usuarioId);
+        cv.put(ENTRADA_ID, entradaId);
+
         db.insert(TABLE_NAME, "registros", cv);
     }
 
@@ -35,7 +51,9 @@ public class registros {
 
     public void updateActualizado(SQLiteDatabase db, String id){
 
-        ContentValues values = new ContentValues();
+        //TODO - refactor after fill the table correctly
+
+        /*ContentValues values = new ContentValues();
         values.put(ACTUALIZADO, "1");
         values.put(REGISTRO,String.valueOf(System.currentTimeMillis()));
 
@@ -44,7 +62,7 @@ public class registros {
                 ID+" = ?",
                 new String[] { id });
 
-        db.close();
+        db.close();*/
 
     }
 

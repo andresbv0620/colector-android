@@ -115,7 +115,9 @@ public class FormActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        DatabaseHelper.insertRegistro(nameStoredForm,String.valueOf(System.currentTimeMillis()));
+                        //TODO - refactor table of registro, and activate this.
+
+                        //DatabaseHelper.insertRegistro(nameStoredForm,String.valueOf(System.currentTimeMillis()));
                         startActivity(new Intent(FormActivity.this, BaseActivity.class));
                         finish();
                     }

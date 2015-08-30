@@ -49,7 +49,8 @@ public class DatabaseHelper {
         initializeDatabase();
         initializeWriteableDatabase();
         registrosTable = new registros();
-        registrosTable.insert(sqLiteDatabase,nombre,registros);
+        //TODO - Refactor call with
+        //registrosTable.insert(sqLiteDatabase,nombre,registros);
     }
 
     public static void insertEmpresa(Enterprise enterprise){
