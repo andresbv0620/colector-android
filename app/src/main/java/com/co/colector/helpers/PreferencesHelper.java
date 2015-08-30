@@ -14,6 +14,7 @@ public class PreferencesHelper {
     private static String keyPreferences = "myPreferences";
     private static String userIdKey = "userIdKey";
     private static String sistemaIdKey = "sistemaIdKey";
+    private static String dbSistemaIdKey = "dbSistemaIdKey";
     private static String loadedDataKey = "loadedDataKey";
     private static Editor editor;
 
@@ -35,15 +36,26 @@ public class PreferencesHelper {
         editor.commit();
     }
 
-    public static void insertLoadedDataKey(int dataLoaded){
+    public static void insertBdIdSistema(String dbSistema){
         instanciateSharedPreferences();
         editor = sharedPreferences.edit();
-        editor.putInt(loadedDataKey,dataLoaded);
+        editor.putString(dbSistemaIdKey, dbSistema);
         editor.commit();
     }
 
     public static int getIdSistema(){
         instanciateSharedPreferences();
         return sharedPreferences.getInt(sistemaIdKey,0);
+    }
+
+    public static String getDbIdSistema(){
+        instanciateSharedPreferences();
+        return sharedPreferences.getString(dbSistemaIdKey, "");
+    }
+
+
+    public static int getUserId(){
+        instanciateSharedPreferences();
+        return sharedPreferences.getInt(userIdKey, 0);
     }
 }

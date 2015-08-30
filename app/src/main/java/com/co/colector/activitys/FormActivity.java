@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,7 @@ public class FormActivity extends Activity {
         });
 
         networkCalls = new NetworkCalls(this);
+
         if (ColectorConstants.catalogArrayList == null) {
             progressDialog = ProgressDialog.show(this,
                     getString(R.string.downloading_title),
@@ -138,6 +140,9 @@ public class FormActivity extends Activity {
 
         this.catalogArrayList = catalogArrayList;
         ColectorConstants.catalogSelected = catalogArrayList.get(ColectorConstants.indexCatalogSelected);
+
+        Log.i("catalogID", ColectorConstants.catalogSelected.getCatalogId());
+
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
 
 

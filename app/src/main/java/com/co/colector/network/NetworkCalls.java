@@ -77,7 +77,9 @@ public class NetworkCalls {
                             ((MainActivity) mContext).addEnterprise(new Enterprise(
                                     joInside.getInt(ColectorConstants.sistemaIdJsonTag),
                                     joInside.getString(ColectorConstants.nombreSistemaJsonTag),
-                                    joInside.getString(ColectorConstants.descripcionSistemaJsonTag)));
+                                    joInside.getString(ColectorConstants.descripcionSistemaJsonTag),
+                                    String.valueOf(joInside.getInt(ColectorConstants.sistemaIdJsonTag)),
+                                    joInside.getString(ColectorConstants.dbSistemaJsonTag)));
 
                             DatabaseHelper.insertEmpresa(new Enterprise(
                                     joInside.getInt(ColectorConstants.sistemaIdJsonTag),
