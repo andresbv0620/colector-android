@@ -40,6 +40,13 @@ public class DatabaseHelper {
         registrosTable.insert(sqLiteDatabase,nombre,registros);
     }
 
+    public static void updateRegistro(String id){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        registrosTable = new registros();
+        registrosTable.updateActualizado(sqLiteDatabase,id);
+    }
+
     public static ArrayList<Registry> getRegistrysOfForms(){
         initializeDatabase();
         initializeReadableDatabase();
@@ -50,7 +57,8 @@ public class DatabaseHelper {
 
         if (cursor.moveToFirst()) {
             while(!cursor.isAfterLast()){
-                registryArrayList.add(new Registry(cursor.getString(cursor.getColumnIndex("nombre")),
+                registryArrayList.add(new Registry(String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))),
+                                      cursor.getString(cursor.getColumnIndex("nombre")),
                                       cursor.getString(cursor.getColumnIndex("registro")),
                                       cursor.getString(cursor.getColumnIndex("actualizado"))));
                 cursor.moveToNext();

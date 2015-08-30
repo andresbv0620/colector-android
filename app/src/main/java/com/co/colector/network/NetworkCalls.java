@@ -81,6 +81,7 @@ public class NetworkCalls {
                         ((MainActivity) mContext).showEnterpriseDialog();
                     }
                     else if (operation == OperationWsCall.FORMS_CALL){
+                        ColectorConstants.catalogSelected = null;
                         jsonArray = jsonObject.getJSONArray(ColectorConstants.catalogosJsonTag);
                         catalogs = new ArrayList<Catalog>();
                         for (int i = 0; i < jsonArray.length(); i++){

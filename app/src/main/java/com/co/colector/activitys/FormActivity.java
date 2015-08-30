@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,8 @@ public class FormActivity extends Activity {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     private Uri fileUri;
+    private int elementNumber = 0;
+    private String nameStoredForm = "";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     @Override
@@ -111,7 +115,7 @@ public class FormActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        DatabaseHelper.insertRegistro("User",String.valueOf(System.currentTimeMillis()));
+                        DatabaseHelper.insertRegistro(nameStoredForm,String.valueOf(System.currentTimeMillis()));
                         startActivity(new Intent(FormActivity.this, BaseActivity.class));
                         finish();
                     }
@@ -126,7 +130,7 @@ public class FormActivity extends Activity {
         ((ImageButton) findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FormActivity.this,MapsActivity.class));
+                startActivity(new Intent(FormActivity.this, MapsActivity.class));
             }
         });
 
@@ -134,8 +138,11 @@ public class FormActivity extends Activity {
         ColectorConstants.catalogSelected = catalogArrayList.get(ColectorConstants.indexCatalogSelected);
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
 
-        for (Tab t: tabsCatalog)
+
+        for (Tab t: tabsCatalog) {
             prepareView((LinearLayout) findViewById(R.id.form), t);
+            elementNumber++;
+        }
 
         try {
             progressDialog.hide();
@@ -158,14 +165,17 @@ public class FormActivity extends Activity {
 
         entriesTab = tab.getEntries();
 
-        for (Entry e: entriesTab)
-            addBottomLayouts(optionsLayout, e);
+        int elementNumberTab = 0;
+        for (Entry e: entriesTab) {
+            addBottomLayouts(optionsLayout, e, elementNumberTab);
+            elementNumber++;
+        }
 
         parent.addView(view);
 
     }
 
-    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry) {
+    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry, final int elementNumberTab) {
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.row_view, null);
@@ -185,6 +195,31 @@ public class FormActivity extends Activity {
                 editText.setSingleLine(true);
                 editText.setHint(entry.getLabelTitle());
                 editText.setPadding(10, 10, 10, 10);
+
+                if (elementNumber == 0 && elementNumberTab == 0){
+
+                    TextWatcher textWatcher = new TextWatcher() {
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        public void afterTextChanged(Editable s) {
+                            if (s.length() == 0) {
+                                nameStoredForm = "";
+                            } else{
+                                nameStoredForm = s.toString();
+                            }
+                        }
+                    };
+
+                    editText.addTextChangedListener(textWatcher);
+
+                }
+
                 mainLayout.addView(editText);
                 break;
 
@@ -236,10 +271,23 @@ public class FormActivity extends Activity {
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-        openCamera();
+                        openCamera();
                     }
                 });
+
+                Button buttonGallery = new Button(this);
+                buttonGallery.setPadding(10, 10, 10, 10);
+                buttonGallery.setText("Mostrar Galeria");
+
+                buttonGallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(FormActivity.this, GridViewActivity.class));
+                    }
+                });
+
                 mainLayout.addView(imageButton);
+                mainLayout.addView(buttonGallery);
                 break;
 
             case 6:

@@ -5,11 +5,19 @@ package com.co.colector.model;
  */
 public class Registry {
 
+    private String id;
     private String name;
     private String registryLabel;
     private String updated;
 
     public Registry(String name, String registryLabel, String updated){
+        this.setName(name);
+        this.setRegistryLabel(registryLabel);
+        this.setUpdated(updated);
+    }
+
+    public Registry(String id, String name, String registryLabel, String updated){
+        this.setId(id);
         this.setName(name);
         this.setRegistryLabel(registryLabel);
         this.setUpdated(updated);
@@ -43,5 +51,13 @@ public class Registry {
 
     public void setUpdated(String updated) {
         this.updated = updated;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

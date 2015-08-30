@@ -17,7 +17,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE registros (id  INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, registro TEXT, actualizado TEXT);");
+        db.execSQL("CREATE TABLE registros (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, registro TEXT, actualizado TEXT);");
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.co.colector.ColectorApplication;
 import com.co.colector.R;
 import com.co.colector.activitys.FormActivity;
 import com.co.colector.adapters.RegistryMenuAdapter;
@@ -41,7 +42,6 @@ public class FragmentInitialMenu extends Fragment {
                 container, false);
 
         registryArrayList = DatabaseHelper.getRegistrysOfForms();
-
 
          if (registryArrayList.size() == 0){
              view.findViewById(R.id.listViewRegistros).setVisibility(View.GONE);

@@ -37,4 +37,7 @@ public class ColectorConstants {
     public static String password = "";
     public static ArrayList<Catalog> catalogArrayList;
     public static int indexCatalogSelected = 0;
+    public static final int NUM_OF_COLUMNS = 3;
+    public static final int GRID_PADDING = 8; // in dp
+
 }
