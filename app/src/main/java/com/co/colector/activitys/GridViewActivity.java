@@ -12,6 +12,8 @@ import com.co.colector.adapters.GridViewImageAdapter;
 import com.co.colector.helpers.ApplicationHelper;
 import com.co.colector.utils.ColectorConstants;
 
+import java.util.ArrayList;
+
 /**
  * Created by User on 28/08/2015.
  */
@@ -19,6 +21,7 @@ public class GridViewActivity extends Activity {
 
     private GridView gridView;
     private int columnWidth;
+    private ArrayList<String> paths;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +33,15 @@ public class GridViewActivity extends Activity {
         gridView = (GridView) findViewById(R.id.grid_view);
         initilizeGridLayout();
 
-        gridView.setAdapter(new GridViewImageAdapter(GridViewActivity.this, ApplicationHelper.getFilePaths(intent.getStringExtra("directory")),
-        columnWidth));
+        paths = ApplicationHelper.getFilePaths(intent.getStringExtra("directory"));
+
+        if (paths.size() != 0) {
+            gridView.setAdapter(new GridViewImageAdapter(GridViewActivity.this, paths ,
+                    columnWidth));
+        }
+        else {
+            onBackPressed();
+        }
     }
 
     private void initilizeGridLayout() {
@@ -48,5 +58,10 @@ public class GridViewActivity extends Activity {
                 (int) padding);
         gridView.setHorizontalSpacing((int) padding);
         gridView.setVerticalSpacing((int) padding);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

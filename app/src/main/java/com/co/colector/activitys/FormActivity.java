@@ -57,7 +57,6 @@ public class FormActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     private Uri fileUri;
     private int elementNumber = 0;
-    private String nameStoredForm = "";
     private String di = "";
     private String timeStamp = "";
     private File mediaStorageDir = null;
@@ -239,12 +238,12 @@ public class FormActivity extends Activity {
                         public void afterTextChanged(Editable s) {
 
                             if (s.length() == 0) {
-                                nameStoredForm = "";
+
                             } else{
                                 Log.i("tabId", tab.getTabId());
                                 Log.i("entry-id", entry.getEntryId());
                                 Log.i("gropu-entry", ColectorConstants.catalogSelected.getGrupoEntrada());
-                                nameStoredForm = s.toString();
+
                             }
                         }
                     };
