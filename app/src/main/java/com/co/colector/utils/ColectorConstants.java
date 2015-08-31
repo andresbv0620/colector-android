@@ -35,6 +35,7 @@ public class ColectorConstants {
     public static final String tabDescripcionJsonTag = "tabDescripcion";
     public static final String optionsJsonTag = "opciones";
     public static final String optionNameJsonTag = "opcionNombre";
+    public static final String respuestaJsonTag = "respuesta";
     public static final String arrayTitles[] = { "Orden de ventas", "Inventario", "Servicio al cliente"};
     public static final String arraySubTitles[] = { "0 registros", "10 registros", "20 registros"};
     public static Catalog catalogSelected = null;

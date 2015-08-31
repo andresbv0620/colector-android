@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Network;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.co.colector.R;
 import com.co.colector.activitys.BaseActivity;
 import com.co.colector.helpers.DatabaseHelper;
+import com.co.colector.helpers.NetworkHelper;
 import com.co.colector.model.Registry;
 
 import java.util.ArrayList;
@@ -70,21 +72,26 @@ public class RegistryMenuAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                final ProgressDialog progressDialog = new ProgressDialog(mContext);
+                NetworkHelper.buildJSONToPost(registry.getId());
+
+                /*final ProgressDialog progressDialog = new ProgressDialog(mContext);
                 progressDialog.setTitle("Updating");
                 progressDialog.setMessage(mContext.getResources().getString(R.string.please_take_a_moment));
                 progressDialog.setIndeterminate(true);
 
                 progressDialog.show();
 
+                //TODO - remove this after success test
+
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
+                        NetworkHelper.buildJSONToPost();
                         progressDialog.dismiss();
                         mContext.startActivity(new Intent(mContext, BaseActivity.class));
                         ((Activity) mContext).finish();
                     }
-                }, 2000);
+                }, 2000);*/
             }
         });
 

@@ -23,6 +23,7 @@ public class registros {
     public static final String ENTRADA_ID = "entradaId";
     public static final String DIRECTORY_PHOTOS = "directory_photos";
     public static final String REGISTRO_FORM_ID = "registro_form_id";
+    public static final String TYPE_ENTRY = "type_entry";
     private ContentValues cv;
 
     public registros(){
@@ -30,7 +31,7 @@ public class registros {
     }
 
     public void insert(SQLiteDatabase db, String catalogoId, String dbSistema, String sistemaId,
-                       String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos, String registroFormId){
+                       String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos, String registroFormId, String typeEntry){
 
         cv = new ContentValues();
 
@@ -45,6 +46,7 @@ public class registros {
         cv.put(ENTRADA_ID, entradaId);
         cv.put(DIRECTORY_PHOTOS, directory_photos);
         cv.put(REGISTRO_FORM_ID, registroFormId);
+        cv.put(TYPE_ENTRY, typeEntry);
 
         Log.i("inserting","yes");
 
@@ -59,11 +61,14 @@ public class registros {
         return db.rawQuery("select * from registros where catalogoId =? and registro_form_id =? and sistemaId=?", new String[]{catalodId, registroFormId, sistemaId});
     }
 
+    public Cursor consultaByRegistroFormId(SQLiteDatabase db, String registroFormId){
+        return db.rawQuery("select * from registros where registro_form_id =? ", new String[]{registroFormId});
+    }
+
     public void updateAnswer(SQLiteDatabase db, String id, String respuesta){
 
         ContentValues values = new ContentValues();
         values.put(RESPUESTA, respuesta);
-
         Log.i("Actualizando", "id = "+id+ " / respuesta = "+respuesta);
 
         db.update(TABLE_NAME,

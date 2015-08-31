@@ -77,10 +77,10 @@ public class FormActivity extends Activity {
 
         idRegistroForm = DatabaseHelper.getMaxIdFromRegistry();
 
-                ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                storeForm();
+        ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+            storeForm();
             }
         });
 
@@ -211,11 +211,11 @@ public class FormActivity extends Activity {
         if (!isImage)
             DatabaseHelper.insertRegistro(ColectorConstants.catalogSelected.getCatalogId(), PreferencesHelper.getDbIdSistema(),
                 String.valueOf(PreferencesHelper.getIdSistema()),"001", ColectorConstants.catalogSelected.getGrupoEntrada(),
-                tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), "", idRegistroForm);
+                tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), "", idRegistroForm, entry.getTypeEntry());
         else
             DatabaseHelper.insertRegistro(ColectorConstants.catalogSelected.getCatalogId(), PreferencesHelper.getDbIdSistema(),
                     String.valueOf(PreferencesHelper.getIdSistema()),"001", ColectorConstants.catalogSelected.getGrupoEntrada(),
-                    tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), di, idRegistroForm);
+                    tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), di, idRegistroForm, entry.getTypeEntry());
 
     }
 

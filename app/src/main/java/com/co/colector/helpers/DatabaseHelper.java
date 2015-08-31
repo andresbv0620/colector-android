@@ -16,6 +16,7 @@ import com.co.colector.database.tab;
 import com.co.colector.model.Catalog;
 import com.co.colector.model.Enterprise;
 import com.co.colector.model.Entry;
+import com.co.colector.model.FormRegistry;
 import com.co.colector.model.Registry;
 import com.co.colector.model.Tab;
 
@@ -36,6 +37,7 @@ public class DatabaseHelper {
     private static tab tabTable;
     private static Cursor cursor;
     private static ArrayList<Registry> registryArrayList;
+    private static ArrayList<FormRegistry> formRegistryArrayList;
 
     private static void initializeDatabase(){
         sqLiteDB = new SQLiteDB(ColectorApplication.getInstance());
@@ -78,12 +80,12 @@ public class DatabaseHelper {
     }
 
     public static void insertRegistro(String catalogoId, String dbSistema, String sistemaId,
-                                      String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos, String registroFormId) {
+                                      String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos, String registroFormId, int typeEntry) {
         initializeDatabase();
         initializeWriteableDatabase();
         registrosTable = new registros();
         registrosTable.insert(sqLiteDatabase,catalogoId,dbSistema,sistemaId,
-                tabletId,grupoEntrada,tabId,respuesta,usuarioId,entradaId,directory_photos, registroFormId);
+                tabletId,grupoEntrada,tabId,respuesta,usuarioId,entradaId,directory_photos, registroFormId, String.valueOf(typeEntry));
     }
 
     public static void insertRegistroForm() {
@@ -134,10 +136,6 @@ public class DatabaseHelper {
 
         if (cursor.moveToFirst()) {
             while(!cursor.isAfterLast()){
-                Log.i("cat-id-env",catalogId);
-                Log.i("catalog-id",cursor.getString(cursor.getColumnIndex("catalogoId")));
-                Log.i("reg-id-env", registroFormId);
-                Log.i("registro-form-id", cursor.getString(cursor.getColumnIndex("registro_form_id")));
                 return true;
             }
             cursor.close();
@@ -149,11 +147,8 @@ public class DatabaseHelper {
 
         initializeDatabase();
         initializeReadableDatabase();
-
-        //TODO - remove hardcoded query string.
-
         final SQLiteStatement stmt = sqLiteDatabase
-                .compileStatement("SELECT MAX(id) FROM empresa");
+                .compileStatement("SELECT MAX(id) FROM registros");
 
         return ""+(int) stmt.simpleQueryForLong();
 
@@ -163,14 +158,47 @@ public class DatabaseHelper {
 
         initializeDatabase();
         initializeReadableDatabase();
-
-        //TODO - remove hardcoded query string.
-
         final SQLiteStatement stmt = sqLiteDatabase
                 .compileStatement("SELECT MAX(id) FROM registro_form");
 
         return ""+(int) stmt.simpleQueryForLong();
 
+    }
+
+    public static ArrayList<FormRegistry> getRegistrysToPost(String idFormRegistry){
+
+        initializeDatabase();
+        initializeReadableDatabase();
+        registrosTable = new registros();
+        formRegistryArrayList = new ArrayList<FormRegistry>();
+        cursor = registrosTable.consultaByRegistroFormId(sqLiteDatabase, idFormRegistry);
+
+        Log.i("id-form",idFormRegistry);
+
+        if (cursor.moveToFirst()) {
+
+            while(!cursor.isAfterLast()){
+
+                formRegistryArrayList.add(new FormRegistry(cursor.getString(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("catalogoId")),
+                        cursor.getString(cursor.getColumnIndex("dbSistema")),
+                        cursor.getString(cursor.getColumnIndex("sistemaId")),
+                        cursor.getString(cursor.getColumnIndex("tablet_id")),
+                        cursor.getString(cursor.getColumnIndex("grupoEntrada")),
+                        cursor.getString(cursor.getColumnIndex("tabId")),
+                        cursor.getString(cursor.getColumnIndex("respuesta")),
+                        cursor.getString(cursor.getColumnIndex("usuarioId")),
+                        cursor.getString(cursor.getColumnIndex("entradaId")),
+                        cursor.getString(cursor.getColumnIndex("directory_photos")),
+                        cursor.getString(cursor.getColumnIndex("registro_form_id")),
+                        cursor.getString(cursor.getColumnIndex("type_entry"))));
+
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        sqLiteDB.close();
+        return formRegistryArrayList;
     }
 
 }

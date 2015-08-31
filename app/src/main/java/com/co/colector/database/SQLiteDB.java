@@ -17,7 +17,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE registros (id INTEGER PRIMARY KEY AUTOINCREMENT, catalogoId TEXT, dbSistema TEXT, sistemaId TEXT, tablet_id TEXT, grupoEntrada TEXT, tabId TEXT, respuesta TEXT, usuarioId TEXT, entradaId TEXT, directory_photos TEXT, registro_form_id TEXT);");
+        db.execSQL("CREATE TABLE registros (id INTEGER PRIMARY KEY AUTOINCREMENT, catalogoId TEXT, dbSistema TEXT, sistemaId TEXT, tablet_id TEXT, grupoEntrada TEXT, tabId TEXT, respuesta TEXT, usuarioId TEXT, entradaId TEXT, directory_photos TEXT, registro_form_id TEXT, type_entry TEXT);");
         db.execSQL("CREATE TABLE empresa (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, sistema_id TEXT, descripcion TEXT, db_sistema TEXT);");
         db.execSQL("CREATE TABLE catalogo (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, catalogo_id TEXT, descripcion TEXT, grupo_entrada TEXT);");
         db.execSQL("CREATE TABLE tab (id INTEGER PRIMARY KEY AUTOINCREMENT, tab_id TEXT, catalogo_id TEXT);");
