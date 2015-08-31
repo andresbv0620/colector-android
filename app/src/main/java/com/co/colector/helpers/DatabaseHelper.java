@@ -100,26 +100,49 @@ public class DatabaseHelper {
         registrosTable.updateAnswer(sqLiteDatabase, id, answer);
     }
 
-    public static ArrayList<Registry> getRegistrysOfForms(){
+    public static ArrayList<Registry> getRegistrysOfForms(Catalog catalog){
+
         initializeDatabase();
         initializeReadableDatabase();
-        registrosTable = new registros();
-
-        cursor = registrosTable.consulta(sqLiteDatabase);
+        registroFormTable = new registro_form();
+        cursor = registroFormTable.consulta(sqLiteDatabase);
         registryArrayList = new ArrayList<Registry>();
+        int i = 0;
 
-       /* if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             while(!cursor.isAfterLast()){
-                registryArrayList.add(new Registry(String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))),
-                                      cursor.getString(cursor.getColumnIndex("nombre")),
-                                      cursor.getString(cursor.getColumnIndex("registro")),
-                                      cursor.getString(cursor.getColumnIndex("actualizado"))));
+                if (isRegistryOfCatalog(catalog.getCatalogId(), String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))))) {
+                    registryArrayList.add(new Registry(String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))),
+                            "Registro: " + (i + 1),
+                            cursor.getString(cursor.getColumnIndex("timestamp")),
+                            cursor.getString(cursor.getColumnIndex("updated"))));
+                    i++;
+                }
+
                 cursor.moveToNext();
             }
             cursor.close();
-        }*/
+        }
         sqLiteDB.close();
         return registryArrayList;
+    }
+
+    public static Boolean isRegistryOfCatalog(String catalogId, String registroFormId){
+
+        registrosTable = new registros();
+        Cursor cursor = registrosTable.consultaByCatalogId(sqLiteDatabase, catalogId, registroFormId, String.valueOf(PreferencesHelper.getIdSistema()));
+
+        if (cursor.moveToFirst()) {
+            while(!cursor.isAfterLast()){
+                Log.i("cat-id-env",catalogId);
+                Log.i("catalog-id",cursor.getString(cursor.getColumnIndex("catalogoId")));
+                Log.i("reg-id-env", registroFormId);
+                Log.i("registro-form-id", cursor.getString(cursor.getColumnIndex("registro_form_id")));
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 
     public static String getMaxId(){

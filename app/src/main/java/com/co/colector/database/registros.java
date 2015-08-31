@@ -55,6 +55,10 @@ public class registros {
         return db.rawQuery("select * from registros", null);
     }
 
+    public Cursor consultaByCatalogId(SQLiteDatabase db, String catalodId, String registroFormId, String sistemaId){
+        return db.rawQuery("select * from registros where catalogoId =? and registro_form_id =? and sistemaId=?", new String[]{catalodId, registroFormId, sistemaId});
+    }
+
     public void updateAnswer(SQLiteDatabase db, String id, String respuesta){
 
         ContentValues values = new ContentValues();

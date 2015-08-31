@@ -12,6 +12,7 @@ public class registro_form {
     public static final String TABLE_NAME = "registro_form";
     public static final String ID = "id";
     public static final String UPDATED = "updated";
+    public static final String TIMESTAMP = "timestamp";
 
     private ContentValues cv;
 
@@ -22,6 +23,7 @@ public class registro_form {
     public void insert(SQLiteDatabase db){
         cv = new ContentValues();
         cv.put(UPDATED, "0");
+        cv.put(TIMESTAMP, System.currentTimeMillis());
         db.insert(TABLE_NAME, "registro_form", cv);
     }
 

@@ -41,7 +41,7 @@ public class FragmentInitialMenu extends Fragment {
         final View view = inflater.inflate(R.layout.menu_ppal_layout,
                 container, false);
 
-        registryArrayList = DatabaseHelper.getRegistrysOfForms();
+        registryArrayList = DatabaseHelper.getRegistrysOfForms(ColectorConstants.catalogSelected);
 
          if (registryArrayList.size() == 0){
              view.findViewById(R.id.listViewRegistros).setVisibility(View.GONE);

@@ -1,6 +1,7 @@
 package com.co.colector.activitys;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
@@ -72,6 +74,16 @@ public class ListFormsActivity extends FragmentActivity implements BaseMethodsAc
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         networkCalls = new NetworkCalls(this);
         buildMenu((ListView) findViewById(R.id.listViewMenu));
+
+        ((ListView) findViewById(R.id.listViewMenu)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ColectorConstants.indexCatalogSelected = i;
+                startActivity(new Intent(ListFormsActivity.this, BaseActivity.class));
+                finish();
+            }
+        });
+
         makeTransaction(new FragmentFormsList(), getSupportFragmentManager(), R.id.content_frame);
         try {
             progressDialog.hide();
@@ -82,7 +94,7 @@ public class ListFormsActivity extends FragmentActivity implements BaseMethodsAc
 
     @Override
     public void buildMenu(ListView listView) {
-        listView.setAdapter(new DrawerMenuAdapterList(this, getFormsTitles(), ColectorConstants.arraySubTitles));
+        listView.setAdapter(new DrawerMenuAdapterList(this, catalogArrayList));
     }
 
     private String[] getFormsTitles(){

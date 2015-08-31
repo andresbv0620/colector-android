@@ -37,11 +37,15 @@ public class MainActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         networkCalls = new NetworkCalls(this);
         enterpriseArrayList = new ArrayList<Enterprise>();
+
         ColectorConstants.catalogSelected = null;
+        ColectorConstants.catalogArrayList = null;
+
         DatabaseHelper.getMaxId();
                 ((EditText) findViewById(R.id.editTextEmail)).setText("jcastillo@perast.cl");
         ((EditText) findViewById(R.id.editTextPassword)).setText("123456");
@@ -62,7 +66,7 @@ public class MainActivity extends Activity{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                networkCalls.makeWsCall(OperationWsCall.ENTERPRISE_CALL,null);
+                networkCalls.makeWsCall(OperationWsCall.ENTERPRISE_CALL, null);
             }
         });
     }
@@ -86,15 +90,9 @@ public class MainActivity extends Activity{
         ((ListView) convertView.findViewById(R.id.lv)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
                 PreferencesHelper.insertIdSistema(enterpriseArrayList.get(position).getId());
                 PreferencesHelper.insertBdIdSistema(enterpriseArrayList.get(position).getDb_system());
-
-                //TODO - remove after finish test
-                Log.i("sistemaId", "" + PreferencesHelper.getIdSistema());
-                Log.i("dbSistema", "" + PreferencesHelper.getDbIdSistema());
-                Log.i("userId", ""+ PreferencesHelper. getUserId());
-                //
-
                 startActivity(new Intent(MainActivity.this, ListFormsActivity.class));
                 finish();
             }

@@ -7,6 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.co.colector.R;
+import com.co.colector.helpers.DatabaseHelper;
+import com.co.colector.model.Catalog;
+
+import java.util.ArrayList;
 
 /**
  * Created by User on 08/01/2015.
@@ -15,23 +19,21 @@ import com.co.colector.R;
 public class DrawerMenuAdapterList extends BaseAdapter {
 
     private Context mContext;
-    private String[] mTitles;
-    private String[] mSubTitles;
+    private ArrayList<Catalog> mTitles;
 
-    public DrawerMenuAdapterList(Context context, String[] mTitles, String[] mSubTitles) {
+    public DrawerMenuAdapterList(Context context, ArrayList<Catalog> mTitles) {
         mContext = context;
         this.mTitles = mTitles;
-        this.mSubTitles = mSubTitles;
     }
 
     @Override
     public int getCount() {
-        return mTitles.length;
+        return mTitles.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mTitles[position];
+        return mTitles.get(position);
     }
 
     @Override
@@ -47,6 +49,8 @@ public class DrawerMenuAdapterList extends BaseAdapter {
         View view = inflater.inflate(R.layout.navigation_drawer_list_item,
                 parent, false);
 
+        Catalog catalog = mTitles.get(position);
+
         TextView labTitle = (TextView) view
                 .findViewById(R.id.drawerMenuItemName);
 
@@ -56,8 +60,8 @@ public class DrawerMenuAdapterList extends BaseAdapter {
         TextView labTitleUp = (TextView) view
                 .findViewById(R.id.drawerTitleUp);
 
-        labTitle.setText(mTitles[position]);
-        labSubTitle.setText(mSubTitles[position]);
+        labTitle.setText(mTitles.get(position).getCatalogTitle());
+        labSubTitle.setText(DatabaseHelper.getRegistrysOfForms(mTitles.get(position)).size()+" registros");
 
          if (position != 0)
              labTitleUp.setVisibility(View.GONE);

@@ -165,6 +165,8 @@ public class FormActivity extends Activity {
 
         Log.i("catalogID", ColectorConstants.catalogSelected.getCatalogId());
 
+        ((TextView) findViewById(R.id.textView3)).setText(ColectorConstants.catalogSelected.getCatalogTitle());
+
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
 
         for (Tab t: tabsCatalog) {

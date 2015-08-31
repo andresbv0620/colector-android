@@ -22,7 +22,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE catalogo (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, catalogo_id TEXT, descripcion TEXT, grupo_entrada TEXT);");
         db.execSQL("CREATE TABLE tab (id INTEGER PRIMARY KEY AUTOINCREMENT, tab_id TEXT, catalogo_id TEXT);");
         db.execSQL("CREATE TABLE entrada (id INTEGER PRIMARY KEY AUTOINCREMENT, entrada_id TEXT, tab_id TEXT);");
-        db.execSQL("CREATE TABLE registro_form (id INTEGER PRIMARY KEY AUTOINCREMENT, updated TEXT);");
+        db.execSQL("CREATE TABLE registro_form (id INTEGER PRIMARY KEY AUTOINCREMENT, updated TEXT, timestamp TEXT);");
     }
 
     @Override
