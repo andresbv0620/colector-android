@@ -1,6 +1,7 @@
 package com.co.colector.activitys;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -24,10 +25,12 @@ public class GridViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        Intent intent = getIntent();
+
         gridView = (GridView) findViewById(R.id.grid_view);
         initilizeGridLayout();
 
-        gridView.setAdapter(new GridViewImageAdapter(GridViewActivity.this, ApplicationHelper.getFilePaths(),
+        gridView.setAdapter(new GridViewImageAdapter(GridViewActivity.this, ApplicationHelper.getFilePaths(intent.getStringExtra("directory")),
         columnWidth));
     }
 

@@ -58,12 +58,20 @@ public class FormActivity extends Activity {
     private Uri fileUri;
     private int elementNumber = 0;
     private String nameStoredForm = "";
+    private String di = "";
+    private String timeStamp = "";
+    private File mediaStorageDir = null;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_form);
+
+        di = "";
+        timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        di = Environment.getExternalStorageDirectory()+"/Colector/Images"+timeStamp;
+        createPhotosDirectory();
 
         ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +96,18 @@ public class FormActivity extends Activity {
             });
         }
         else init(ColectorConstants.catalogArrayList);
+    }
+
+    private void createPhotosDirectory(){
+
+        mediaStorageDir = new File(di);
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+
+            }
+        }
+
     }
 
     public void exitFormAlert(){
@@ -295,7 +315,9 @@ public class FormActivity extends Activity {
                 buttonGallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(FormActivity.this, GridViewActivity.class));
+                        Intent intent = new Intent(FormActivity.this, GridViewActivity.class);
+                        intent.putExtra("directory",di);
+                        startActivity(intent);
                     }
                 });
 
@@ -441,31 +463,12 @@ public class FormActivity extends Activity {
 
     private File getOutputMediaFile(int type){
 
-        String di = "";
-
-        if (type == MEDIA_TYPE_IMAGE){
-            di = Environment.getExternalStorageDirectory()+"/Colector/Images";
-        }
-
-        File mediaStorageDir = new File(di);
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
-
+        timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         if (type == MEDIA_TYPE_IMAGE){
 
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
 
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
         } else {
             return null;
         }

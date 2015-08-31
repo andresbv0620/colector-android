@@ -18,12 +18,11 @@ import java.util.ArrayList;
  */
 public class ApplicationHelper {
 
-    public static ArrayList<String> getFilePaths() {
+    public static ArrayList<String> getFilePaths(String filesDirectory) {
 
         ArrayList<String> filePaths = new ArrayList<String>();
 
-        File directory = new File(
-                Environment.getExternalStorageDirectory()+"/Colector/Images");
+        File directory = new File(filesDirectory);
 
         // check for directory
         if (directory.isDirectory()) {
