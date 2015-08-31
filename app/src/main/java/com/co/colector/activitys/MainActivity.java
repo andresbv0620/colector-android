@@ -85,9 +85,13 @@ public class MainActivity extends Activity{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 PreferencesHelper.insertIdSistema(enterpriseArrayList.get(position).getId());
                 PreferencesHelper.insertBdIdSistema(enterpriseArrayList.get(position).getDb_system());
+
+                //TODO - remove after finish test
                 Log.i("sistemaId", "" + PreferencesHelper.getIdSistema());
                 Log.i("dbSistema", "" + PreferencesHelper.getDbIdSistema());
                 Log.i("userId", ""+ PreferencesHelper. getUserId());
+                //
+
                 startActivity(new Intent(MainActivity.this, ListFormsActivity.class));
                 finish();
             }

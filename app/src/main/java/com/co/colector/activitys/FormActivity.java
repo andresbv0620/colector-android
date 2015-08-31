@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.co.colector.MapsActivity;
 import com.co.colector.R;
@@ -147,6 +148,7 @@ public class FormActivity extends Activity {
 
 
         for (Tab t: tabsCatalog) {
+            Log.i("tabID",t.getTabId());
             prepareView((LinearLayout) findViewById(R.id.form), t);
             elementNumber++;
         }
@@ -174,7 +176,7 @@ public class FormActivity extends Activity {
 
         int elementNumberTab = 0;
         for (Entry e: entriesTab) {
-            addBottomLayouts(optionsLayout, e, elementNumberTab);
+            addBottomLayouts(optionsLayout, e, elementNumberTab, tab);
             elementNumber++;
         }
 
@@ -182,7 +184,7 @@ public class FormActivity extends Activity {
 
     }
 
-    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry, final int elementNumberTab) {
+    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry, final int elementNumberTab, final Tab tab) {
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.row_view, null);
@@ -215,9 +217,13 @@ public class FormActivity extends Activity {
                         }
 
                         public void afterTextChanged(Editable s) {
+
                             if (s.length() == 0) {
                                 nameStoredForm = "";
                             } else{
+                                Log.i("tabId", tab.getTabId());
+                                Log.i("entry-id", entry.getEntryId());
+                                Log.i("gropu-entry", ColectorConstants.catalogSelected.getGrupoEntrada());
                                 nameStoredForm = s.toString();
                             }
                         }
@@ -241,7 +247,7 @@ public class FormActivity extends Activity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        createBuilderTabs(entry.getOptions(),true);
+                    createBuilderTabs(entry.getOptions(),true);
                     }
                 });
                 mainLayout.addView(button);
@@ -365,13 +371,21 @@ public class FormActivity extends Activity {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
-    public void createBuilderTabs(ArrayList<String> list, Boolean isSimpleChoice){
+    public void createBuilderTabs(final ArrayList<String> list, Boolean isSimpleChoice){
 
         AlertDialog.Builder builderTabs;
+
+        final ArrayList<Integer> selList = new ArrayList();
+        boolean[] checkedOptions = new boolean[list.size()];
+        for(int i = 0; i < list.size(); i++)
+            checkedOptions[i] = false;
+        final CharSequence[] charsOptions = list.toArray(new CharSequence[list.size()]);
 
         DialogInterface.OnClickListener optionsDialogListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                String singleAnswer = list.get(i);
+                Log.i("single-answer", singleAnswer);
                 dialogInterface.dismiss();
             }
         };
@@ -379,25 +393,48 @@ public class FormActivity extends Activity {
         DialogInterface.OnMultiChoiceClickListener optionsMultpleDialogListener = new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-               if (which > 1) {
-                   dialog.dismiss();
+               if(isChecked) {
+                   selList.add(which);
+               }
+               else if (selList.contains(which)) {
+                   selList.remove(Integer.valueOf(which));
                }
             }
         };
-
-        boolean[] checkedOptions = new boolean[list.size()];
-        for(int i = 0; i < list.size(); i++)
-            checkedOptions[i] = false;
 
         builderTabs = new AlertDialog.Builder(this);
 
         builderTabs.setTitle("Seleccion de opciones");
 
-        final CharSequence[] charsOptions = list.toArray(new CharSequence[list.size()]);
         if (isSimpleChoice)
             builderTabs.setSingleChoiceItems(charsOptions , -1 , optionsDialogListener);
         else
             builderTabs.setMultiChoiceItems(charsOptions , checkedOptions , optionsMultpleDialogListener);
+
+        builderTabs.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+
+                String msg = "";
+
+                for (int i = 0; i < selList.size(); i++) {
+                    if (i == 0)
+                        msg = ""+charsOptions[selList.get(i)];
+                    else msg = msg + ";"+charsOptions[selList.get(i)];
+                }
+
+            }
+        });
+
+        builderTabs.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        builderTabs.setCancelable(false);
+
         AlertDialog dialog = builderTabs.create();
         dialog.show();
     }
