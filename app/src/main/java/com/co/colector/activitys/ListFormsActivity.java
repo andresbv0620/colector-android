@@ -124,4 +124,9 @@ public class ListFormsActivity extends FragmentActivity implements BaseMethodsAc
         }
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

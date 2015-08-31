@@ -41,6 +41,7 @@ public class MainActivity extends Activity{
         setContentView(R.layout.login);
         networkCalls = new NetworkCalls(this);
         enterpriseArrayList = new ArrayList<Enterprise>();
+        ColectorConstants.catalogSelected = null;
         DatabaseHelper.getMaxId();
                 ((EditText) findViewById(R.id.editTextEmail)).setText("jcastillo@perast.cl");
         ((EditText) findViewById(R.id.editTextPassword)).setText("123456");

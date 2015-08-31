@@ -10,6 +10,7 @@ import com.co.colector.database.SQLiteDB;
 import com.co.colector.database.catalogo;
 import com.co.colector.database.empresa;
 import com.co.colector.database.entrada;
+import com.co.colector.database.registro_form;
 import com.co.colector.database.registros;
 import com.co.colector.database.tab;
 import com.co.colector.model.Catalog;
@@ -31,6 +32,7 @@ public class DatabaseHelper {
     private static empresa empresaTable;
     private static catalogo catalogoTable;
     private static entrada entradaTable;
+    private static registro_form registroFormTable;
     private static tab tabTable;
     private static Cursor cursor;
     private static ArrayList<Registry> registryArrayList;
@@ -76,19 +78,26 @@ public class DatabaseHelper {
     }
 
     public static void insertRegistro(String catalogoId, String dbSistema, String sistemaId,
-                                      String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos) {
+                                      String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos, String registroFormId) {
         initializeDatabase();
         initializeWriteableDatabase();
         registrosTable = new registros();
         registrosTable.insert(sqLiteDatabase,catalogoId,dbSistema,sistemaId,
-                tabletId,grupoEntrada,tabId,respuesta,usuarioId,entradaId,directory_photos);
+                tabletId,grupoEntrada,tabId,respuesta,usuarioId,entradaId,directory_photos, registroFormId);
     }
 
-    public static void updateRegistro(String id){
+    public static void insertRegistroForm() {
+        initializeDatabase();
+        initializeWriteableDatabase();
+        registroFormTable = new registro_form();
+        registroFormTable.insert(sqLiteDatabase);
+    }
+
+    public static void updateRegistro(String id, String answer){
         initializeDatabase();
         initializeWriteableDatabase();
         registrosTable = new registros();
-        //registrosTable.updateActualizado(sqLiteDatabase,id);
+        registrosTable.updateAnswer(sqLiteDatabase, id, answer);
     }
 
     public static ArrayList<Registry> getRegistrysOfForms(){
@@ -122,6 +131,20 @@ public class DatabaseHelper {
 
         final SQLiteStatement stmt = sqLiteDatabase
                 .compileStatement("SELECT MAX(id) FROM empresa");
+
+        return ""+(int) stmt.simpleQueryForLong();
+
+    }
+
+    public static String getMaxIdFromRegistry(){
+
+        initializeDatabase();
+        initializeReadableDatabase();
+
+        //TODO - remove hardcoded query string.
+
+        final SQLiteStatement stmt = sqLiteDatabase
+                .compileStatement("SELECT MAX(id) FROM registro_form");
 
         return ""+(int) stmt.simpleQueryForLong();
 

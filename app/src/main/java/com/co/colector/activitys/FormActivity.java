@@ -61,6 +61,7 @@ public class FormActivity extends Activity {
     private String di = "";
     private String timeStamp = "";
     private File mediaStorageDir = null;
+    private String idRegistroForm = "";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     @Override
@@ -72,8 +73,11 @@ public class FormActivity extends Activity {
         timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         di = Environment.getExternalStorageDirectory()+"/Colector/Images"+timeStamp;
         createPhotosDirectory();
+        DatabaseHelper.insertRegistroForm();
 
-        ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
+        idRegistroForm = DatabaseHelper.getMaxIdFromRegistry();
+
+                ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 storeForm();
@@ -205,11 +209,11 @@ public class FormActivity extends Activity {
         if (!isImage)
             DatabaseHelper.insertRegistro(ColectorConstants.catalogSelected.getCatalogId(), PreferencesHelper.getDbIdSistema(),
                 String.valueOf(PreferencesHelper.getIdSistema()),"001", ColectorConstants.catalogSelected.getGrupoEntrada(),
-                tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), "");
+                tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), "", idRegistroForm);
         else
             DatabaseHelper.insertRegistro(ColectorConstants.catalogSelected.getCatalogId(), PreferencesHelper.getDbIdSistema(),
                     String.valueOf(PreferencesHelper.getIdSistema()),"001", ColectorConstants.catalogSelected.getGrupoEntrada(),
-                    tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), di);
+                    tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), di, idRegistroForm);
 
     }
 
@@ -236,6 +240,7 @@ public class FormActivity extends Activity {
                 editText.setPadding(10, 10, 10, 10);
 
                 insertingData(false, tab, entry);
+                final String idUpdate = DatabaseHelper.getMaxId();
 
                 if (elementNumber == 0 && elementNumberTab == 0){
 
@@ -255,6 +260,8 @@ public class FormActivity extends Activity {
                             } else{
 
                                 //TODO - Here going the logic of update registry.
+
+                                DatabaseHelper.updateRegistro(idUpdate,s.toString());
 
                             }
                         }
@@ -277,10 +284,12 @@ public class FormActivity extends Activity {
                 button.setLayoutParams(params);
                 button.setText("Desplegar opciones");
 
+                final String idUpdateMultipleAlerts = DatabaseHelper.getMaxId();
+
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        createBuilderTabs(entry.getOptions(),true);
+                        createBuilderTabs(entry.getOptions(),true, idUpdateMultipleAlerts);
                     }
                 });
                 mainLayout.addView(button);
@@ -291,7 +300,6 @@ public class FormActivity extends Activity {
             case 4: Button secondButton = new Button(this);
                     secondButton.setPadding(10, 10, 10, 10);
 
-
                      insertingData(false, tab, entry);
 
                     LinearLayout.LayoutParams firsButtonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -299,10 +307,12 @@ public class FormActivity extends Activity {
                     secondButton.setLayoutParams(firsButtonParams);
                     secondButton.setText("Desplegar opciones");
 
+                    final String idUpdateSimpleAlerts = DatabaseHelper.getMaxId();
+
                     secondButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            createBuilderTabs(entry.getOptions(),false);
+                            createBuilderTabs(entry.getOptions(),false, idUpdateSimpleAlerts);
                         }
                     });
                     mainLayout.addView(secondButton);
@@ -314,7 +324,6 @@ public class FormActivity extends Activity {
                 imageButton.setImageResource(R.drawable.btn_plus_photo);
                 imageButton.setBackgroundResource(0);
                 imageButton.setPadding(10, 10, 10, 10);
-
 
                 insertingData(true, tab, entry);
 
@@ -356,6 +365,7 @@ public class FormActivity extends Activity {
                 edittext.setFocusable(false);
 
                 insertingData(false, tab, entry);
+                final String idUpdateDate = DatabaseHelper.getMaxId();
 
                 final Calendar myCalendar = Calendar.getInstance();
 
@@ -370,6 +380,9 @@ public class FormActivity extends Activity {
                         String myFormat = "dd/MM/yyyy";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
                         edittext.setText(sdf.format(myCalendar.getTime()));
+                        //TODO - Here going the logic of update registry.
+                        DatabaseHelper.updateRegistro(idUpdateDate,sdf.format(myCalendar.getTime()));
+
                     }
 
                 };
@@ -416,7 +429,7 @@ public class FormActivity extends Activity {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
-    public void createBuilderTabs(final ArrayList<String> list, Boolean isSimpleChoice){
+    public void createBuilderTabs(final ArrayList<String> list, Boolean isSimpleChoice, final String updateId){
 
         AlertDialog.Builder builderTabs;
 
@@ -431,6 +444,8 @@ public class FormActivity extends Activity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String singleAnswer = list.get(i);
                 Log.i("single-answer", singleAnswer);
+                //TODO - Here going the logic of update registry.
+                DatabaseHelper.updateRegistro(updateId, singleAnswer);
                 dialogInterface.dismiss();
             }
         };
@@ -466,8 +481,11 @@ public class FormActivity extends Activity {
                     if (i == 0)
                         msg = ""+charsOptions[selList.get(i)];
                     else msg = msg + ";"+charsOptions[selList.get(i)];
+
                 }
 
+                //TODO - Here going the logic of update registry.
+                DatabaseHelper.updateRegistro(updateId, msg);
             }
         });
 

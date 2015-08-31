@@ -22,6 +22,7 @@ public class registros {
     public static final String USUARIO_ID = "usuarioId";
     public static final String ENTRADA_ID = "entradaId";
     public static final String DIRECTORY_PHOTOS = "directory_photos";
+    public static final String REGISTRO_FORM_ID = "registro_form_id";
     private ContentValues cv;
 
     public registros(){
@@ -29,7 +30,7 @@ public class registros {
     }
 
     public void insert(SQLiteDatabase db, String catalogoId, String dbSistema, String sistemaId,
-                       String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos){
+                       String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos, String registroFormId){
 
         cv = new ContentValues();
 
@@ -43,6 +44,7 @@ public class registros {
         cv.put(USUARIO_ID, usuarioId);
         cv.put(ENTRADA_ID, entradaId);
         cv.put(DIRECTORY_PHOTOS, directory_photos);
+        cv.put(REGISTRO_FORM_ID, registroFormId);
 
         Log.i("inserting","yes");
 
@@ -58,9 +60,11 @@ public class registros {
         ContentValues values = new ContentValues();
         values.put(RESPUESTA, respuesta);
 
+        Log.i("Actualizando", "id = "+id+ " / respuesta = "+respuesta);
+
         db.update(TABLE_NAME,
                 values,
-                ID+" = ?",
+                ID +" = ?",
                 new String[] { id });
 
         db.close();

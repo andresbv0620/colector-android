@@ -81,7 +81,6 @@ public class RegistryMenuAdapter extends BaseAdapter {
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         progressDialog.dismiss();
-                        DatabaseHelper.updateRegistro(registry.getId());
                         mContext.startActivity(new Intent(mContext, BaseActivity.class));
                         ((Activity) mContext).finish();
                     }
