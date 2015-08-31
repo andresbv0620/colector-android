@@ -5,6 +5,7 @@ import android.util.Log;
 import com.co.colector.model.FormRegistry;
 import com.co.colector.utils.ColectorConstants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,8 +42,16 @@ public class NetworkHelper {
                     case 1:
                     case 4:
                     case 6:   jsonObject.put(ColectorConstants.respuestaJsonTag, form.getRespuesta());
+                              break;
 
-                        break;
+                    case 3:   String[] arrayMultipleOptions = form.getRespuesta().split(";");
+                              JSONArray jsonArray = new JSONArray();
+
+                              for (int i = 0; i < arrayMultipleOptions.length; i++)
+                                  jsonArray.put(arrayMultipleOptions[i]);
+
+                              jsonObject.put(ColectorConstants.respuestaJsonTag, jsonArray);
+                              break;
                 }
 
                 Log.i("json", jsonObject.toString());

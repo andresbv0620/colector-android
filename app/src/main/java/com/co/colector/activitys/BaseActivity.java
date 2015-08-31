@@ -22,6 +22,7 @@ import com.co.colector.R;
 import com.co.colector.adapters.DrawerMenuAdapterList;
 import com.co.colector.fragments.FragmentForm;
 import com.co.colector.fragments.FragmentInitialMenu;
+import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.interfaces.BaseMethodsActivity;
 import com.co.colector.model.Catalog;
 import com.co.colector.network.NetworkCalls;
@@ -162,15 +163,21 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         finish();
     }
 
-    public void postJson(final ArrayList<JSONObject> jsonObjects){
+    public void postJson(final ArrayList<JSONObject> jsonObjects, final String idUpdate){
 
         //TODO - Refactor all this code piece.
 
         AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
 
+            private ProgressDialog progressDialog;
+
             @Override
             protected void onPreExecute() {
-                super.onPreExecute();
+                progressDialog = new ProgressDialog(BaseActivity.this);
+                progressDialog.setTitle("Updating");
+                progressDialog.setMessage(getResources().getString(R.string.please_take_a_moment));
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
             }
 
             @Override
@@ -193,6 +200,7 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
                     post.setEntity(se);
                     try {
                         response = client.execute(post);
+                        Log.i("resp", EntityUtils.toString(response.getEntity()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -202,7 +210,10 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
 
             @Override
             protected void onPostExecute(String s) {
-                super.onPostExecute(s);
+                DatabaseHelper.updateRegistroForm(idUpdate);
+                progressDialog.dismiss();
+                startActivity(new Intent(BaseActivity.this, BaseActivity.class));
+                finish();
             }
         };
 

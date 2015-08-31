@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.co.colector.R;
 import com.co.colector.activitys.BaseActivity;
 import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.helpers.NetworkHelper;
 import com.co.colector.model.Registry;
+import com.co.colector.utils.ConnectionManager;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -71,27 +73,10 @@ public class RegistryMenuAdapter extends BaseAdapter {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                ((BaseActivity) mContext).postJson(NetworkHelper.buildJSONToPost(registry.getId()));
-
-                /*final ProgressDialog progressDialog = new ProgressDialog(mContext);
-                progressDialog.setTitle("Updating");
-                progressDialog.setMessage(mContext.getResources().getString(R.string.please_take_a_moment));
-                progressDialog.setIndeterminate(true);
-
-                progressDialog.show();
-
-                //TODO - remove this after success test
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        NetworkHelper.buildJSONToPost();
-                        progressDialog.dismiss();
-                        mContext.startActivity(new Intent(mContext, BaseActivity.class));
-                        ((Activity) mContext).finish();
-                    }
-                }, 2000);*/
+                if (ConnectionManager.isConnected())
+                    ((BaseActivity) mContext).postJson(NetworkHelper.buildJSONToPost(registry.getId()), registry.getId());
+                else
+                    Toast.makeText(mContext,"Se necesita conexion a red de datos o WiFi para continuar con la operacion", Toast.LENGTH_LONG).show();
             }
         });
 

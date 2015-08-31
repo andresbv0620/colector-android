@@ -225,23 +225,4 @@ public class NetworkCalls {
         VolleySingleton.getInstance(ColectorApplication.getInstance()).addToRequestQueue(sr);
     }
 
-    public void postingAnswersCall(JSONObject json){
-
-        url = ColectorApplication.getInstance().getResources().getString(R.string.url_inputs);
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject response) {
-            Log.i("response", response.toString());
-        }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("error", error.toString());
-            }
-        });
-
-        VolleySingleton.getInstance(ColectorApplication.getInstance()).addToRequestQueue(request);
-    }
-
 }

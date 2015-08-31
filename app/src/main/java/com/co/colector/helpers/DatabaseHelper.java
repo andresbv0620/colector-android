@@ -102,6 +102,13 @@ public class DatabaseHelper {
         registrosTable.updateAnswer(sqLiteDatabase, id, answer);
     }
 
+    public static void updateRegistroForm(String id){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        registroFormTable = new registro_form();
+        registroFormTable.updateValues(sqLiteDatabase, id);
+    }
+
     public static ArrayList<Registry> getRegistrysOfForms(Catalog catalog){
 
         initializeDatabase();
@@ -172,8 +179,6 @@ public class DatabaseHelper {
         registrosTable = new registros();
         formRegistryArrayList = new ArrayList<FormRegistry>();
         cursor = registrosTable.consultaByRegistroFormId(sqLiteDatabase, idFormRegistry);
-
-        Log.i("id-form",idFormRegistry);
 
         if (cursor.moveToFirst()) {
 
