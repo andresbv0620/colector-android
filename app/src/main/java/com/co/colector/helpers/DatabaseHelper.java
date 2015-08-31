@@ -2,6 +2,8 @@ package com.co.colector.helpers;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import com.co.colector.ColectorApplication;
 import com.co.colector.database.SQLiteDB;
@@ -45,14 +47,6 @@ public class DatabaseHelper {
         sqLiteDatabase = sqLiteDB.getReadableDatabase();
     }
 
-    public static void insertRegistro(String nombre, String registros){
-        initializeDatabase();
-        initializeWriteableDatabase();
-        registrosTable = new registros();
-        //TODO - Refactor call with
-        //registrosTable.insert(sqLiteDatabase,nombre,registros);
-    }
-
     public static void insertEmpresa(Enterprise enterprise){
         initializeDatabase();
         initializeWriteableDatabase();
@@ -81,11 +75,20 @@ public class DatabaseHelper {
         entradaTable.insert(sqLiteDatabase,entry.getEntryId(),entry.getTabId());
     }
 
+    public static void insertRegistro(String catalogoId, String dbSistema, String sistemaId,
+                                      String tabletId, String grupoEntrada, String tabId, String respuesta, String usuarioId, String entradaId, String directory_photos) {
+        initializeDatabase();
+        initializeWriteableDatabase();
+        registrosTable = new registros();
+        registrosTable.insert(sqLiteDatabase,catalogoId,dbSistema,sistemaId,
+                tabletId,grupoEntrada,tabId,respuesta,usuarioId,entradaId,directory_photos);
+    }
+
     public static void updateRegistro(String id){
         initializeDatabase();
         initializeWriteableDatabase();
         registrosTable = new registros();
-        registrosTable.updateActualizado(sqLiteDatabase,id);
+        //registrosTable.updateActualizado(sqLiteDatabase,id);
     }
 
     public static ArrayList<Registry> getRegistrysOfForms(){
@@ -96,7 +99,7 @@ public class DatabaseHelper {
         cursor = registrosTable.consulta(sqLiteDatabase);
         registryArrayList = new ArrayList<Registry>();
 
-        if (cursor.moveToFirst()) {
+       /* if (cursor.moveToFirst()) {
             while(!cursor.isAfterLast()){
                 registryArrayList.add(new Registry(String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))),
                                       cursor.getString(cursor.getColumnIndex("nombre")),
@@ -105,9 +108,23 @@ public class DatabaseHelper {
                 cursor.moveToNext();
             }
             cursor.close();
-        }
+        }*/
         sqLiteDB.close();
         return registryArrayList;
+    }
+
+    public static String getMaxId(){
+
+        initializeDatabase();
+        initializeReadableDatabase();
+
+        //TODO - remove hardcoded query string.
+
+        final SQLiteStatement stmt = sqLiteDatabase
+                .compileStatement("SELECT MAX(id) FROM empresa");
+
+        return ""+(int) stmt.simpleQueryForLong();
+
     }
 
 }

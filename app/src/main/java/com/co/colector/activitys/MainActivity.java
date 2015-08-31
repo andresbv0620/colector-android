@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.co.colector.ColectorApplication;
 import com.co.colector.R;
+import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.model.Enterprise;
 import com.co.colector.network.NetworkCalls;
@@ -40,7 +41,8 @@ public class MainActivity extends Activity{
         setContentView(R.layout.login);
         networkCalls = new NetworkCalls(this);
         enterpriseArrayList = new ArrayList<Enterprise>();
-        ((EditText) findViewById(R.id.editTextEmail)).setText("jcastillo@perast.cl");
+        DatabaseHelper.getMaxId();
+                ((EditText) findViewById(R.id.editTextEmail)).setText("jcastillo@perast.cl");
         ((EditText) findViewById(R.id.editTextPassword)).setText("123456");
         init();
     }

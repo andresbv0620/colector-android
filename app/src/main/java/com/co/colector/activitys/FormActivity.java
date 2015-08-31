@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.co.colector.MapsActivity;
 import com.co.colector.R;
 import com.co.colector.helpers.DatabaseHelper;
+import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.model.Catalog;
 import com.co.colector.model.Entry;
 import com.co.colector.model.Tab;
@@ -91,6 +92,7 @@ public class FormActivity extends Activity {
                 @Override
                 public void run() {
                     networkCalls.makeWsCall(OperationWsCall.FORMS_CALL, OperationWsCall.FORM_ACTIVITY);
+
                 }
             });
         }
@@ -136,10 +138,6 @@ public class FormActivity extends Activity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        //TODO - refactor table of registro, and activate this.
-
-                        //DatabaseHelper.insertRegistro(nameStoredForm,String.valueOf(System.currentTimeMillis()));
                         startActivity(new Intent(FormActivity.this, BaseActivity.class));
                         finish();
                     }
@@ -164,7 +162,6 @@ public class FormActivity extends Activity {
         Log.i("catalogID", ColectorConstants.catalogSelected.getCatalogId());
 
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
-
 
         for (Tab t: tabsCatalog) {
             Log.i("tabID",t.getTabId());
@@ -203,6 +200,19 @@ public class FormActivity extends Activity {
 
     }
 
+    private void insertingData(Boolean isImage, Tab tab, Entry entry){
+
+        if (!isImage)
+            DatabaseHelper.insertRegistro(ColectorConstants.catalogSelected.getCatalogId(), PreferencesHelper.getDbIdSistema(),
+                String.valueOf(PreferencesHelper.getIdSistema()),"001", ColectorConstants.catalogSelected.getGrupoEntrada(),
+                tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), "");
+        else
+            DatabaseHelper.insertRegistro(ColectorConstants.catalogSelected.getCatalogId(), PreferencesHelper.getDbIdSistema(),
+                    String.valueOf(PreferencesHelper.getIdSistema()),"001", ColectorConstants.catalogSelected.getGrupoEntrada(),
+                    tab.getTabId(), "", String.valueOf(PreferencesHelper.getUserId()), entry.getEntryId(), di);
+
+    }
+
     private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry, final int elementNumberTab, final Tab tab) {
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -217,12 +227,15 @@ public class FormActivity extends Activity {
         switch (entry.getTypeEntry()){
 
             case 1:
+
                 EditText editText = new EditText(this);
                 editText.setMaxLines(1);
                 editText.setBackgroundResource(R.drawable.text_line);
                 editText.setSingleLine(true);
                 editText.setHint(entry.getLabelTitle());
                 editText.setPadding(10, 10, 10, 10);
+
+                insertingData(false, tab, entry);
 
                 if (elementNumber == 0 && elementNumberTab == 0){
 
@@ -240,9 +253,8 @@ public class FormActivity extends Activity {
                             if (s.length() == 0) {
 
                             } else{
-                                Log.i("tabId", tab.getTabId());
-                                Log.i("entry-id", entry.getEntryId());
-                                Log.i("gropu-entry", ColectorConstants.catalogSelected.getGrupoEntrada());
+
+                                //TODO - Here going the logic of update registry.
 
                             }
                         }
@@ -258,6 +270,8 @@ public class FormActivity extends Activity {
             case 3: Button button = new Button(this);
                     button.setPadding(10, 10, 10, 10);
 
+                insertingData(false, tab, entry);
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.gravity = Gravity.LEFT;
                 button.setLayoutParams(params);
@@ -266,14 +280,19 @@ public class FormActivity extends Activity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                    createBuilderTabs(entry.getOptions(),true);
+                        createBuilderTabs(entry.getOptions(),true);
                     }
                 });
                 mainLayout.addView(button);
+
+
                 break;
 
             case 4: Button secondButton = new Button(this);
                     secondButton.setPadding(10, 10, 10, 10);
+
+
+                     insertingData(false, tab, entry);
 
                     LinearLayout.LayoutParams firsButtonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     firsButtonParams.gravity = Gravity.LEFT;
@@ -295,6 +314,9 @@ public class FormActivity extends Activity {
                 imageButton.setImageResource(R.drawable.btn_plus_photo);
                 imageButton.setBackgroundResource(0);
                 imageButton.setPadding(10, 10, 10, 10);
+
+
+                insertingData(true, tab, entry);
 
                 LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 buttonParams.gravity = Gravity.LEFT;
@@ -332,6 +354,9 @@ public class FormActivity extends Activity {
                 edittext.setHint(entry.getLabelTitle());
                 edittext.setPadding(10, 10, 10, 10);
                 edittext.setFocusable(false);
+
+                insertingData(false, tab, entry);
+
                 final Calendar myCalendar = Calendar.getInstance();
 
                 final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -342,7 +367,6 @@ public class FormActivity extends Activity {
                         myCalendar.set(Calendar.YEAR, year);
                         myCalendar.set(Calendar.MONTH, monthOfYear);
                         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        // TODO - Pass this format to ColectorConstants file.
                         String myFormat = "dd/MM/yyyy";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
                         edittext.setText(sdf.format(myCalendar.getTime()));

@@ -44,6 +44,8 @@ public class registros {
         cv.put(ENTRADA_ID, entradaId);
         cv.put(DIRECTORY_PHOTOS, directory_photos);
 
+        Log.i("inserting","yes");
+
         db.insert(TABLE_NAME, "registros", cv);
     }
 
@@ -51,20 +53,17 @@ public class registros {
         return db.rawQuery("select * from registros", null);
     }
 
-    public void updateActualizado(SQLiteDatabase db, String id){
+    public void updateAnswer(SQLiteDatabase db, String id, String respuesta){
 
-        //TODO - refactor after fill the table correctly
-
-        /*ContentValues values = new ContentValues();
-        values.put(ACTUALIZADO, "1");
-        values.put(REGISTRO,String.valueOf(System.currentTimeMillis()));
+        ContentValues values = new ContentValues();
+        values.put(RESPUESTA, respuesta);
 
         db.update(TABLE_NAME,
                 values,
                 ID+" = ?",
                 new String[] { id });
 
-        db.close();*/
+        db.close();
 
     }
 
