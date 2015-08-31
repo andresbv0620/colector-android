@@ -2,18 +2,22 @@ package com.co.colector.activitys;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+
+import com.co.colector.ColectorApplication;
 import com.co.colector.R;
 import com.co.colector.adapters.DrawerMenuAdapterList;
 import com.co.colector.fragments.FragmentForm;
@@ -23,6 +27,20 @@ import com.co.colector.model.Catalog;
 import com.co.colector.network.NetworkCalls;
 import com.co.colector.utils.ColectorConstants;
 import com.co.colector.utils.OperationWsCall;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -142,5 +160,52 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         super.onBackPressed();
         startActivity(new Intent(this, ListFormsActivity.class));
         finish();
+    }
+
+    public void postJson(final ArrayList<JSONObject> jsonObjects){
+
+        //TODO - Refactor all this code piece.
+
+        AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+
+                for (JSONObject json : jsonObjects) {
+
+                    String url = ColectorApplication.getInstance().getResources().getString(R.string.url_inputs);
+                    HttpClient client = new DefaultHttpClient();
+                    HttpResponse response;
+
+                    HttpPost post = new HttpPost(url);
+                    StringEntity se = null;
+                    try {
+                        se = new StringEntity(json.toString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(se);
+                    try {
+                        response = client.execute(post);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+            }
+        };
+
+        asyncTask.execute();
     }
 }

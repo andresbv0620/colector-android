@@ -1,12 +1,18 @@
 package com.co.colector.network;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.co.colector.ColectorApplication;
 import com.co.colector.R;
@@ -217,6 +223,25 @@ public class NetworkCalls {
         };
 
         VolleySingleton.getInstance(ColectorApplication.getInstance()).addToRequestQueue(sr);
+    }
+
+    public void postingAnswersCall(JSONObject json){
+
+        url = ColectorApplication.getInstance().getResources().getString(R.string.url_inputs);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
+            Log.i("response", response.toString());
+        }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("error", error.toString());
+            }
+        });
+
+        VolleySingleton.getInstance(ColectorApplication.getInstance()).addToRequestQueue(request);
     }
 
 }

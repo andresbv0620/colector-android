@@ -15,13 +15,13 @@ import java.util.ArrayList;
  */
 public class NetworkHelper {
 
-    public static void buildJSONToPost(String formId){
+    public static ArrayList<JSONObject> buildJSONToPost(String formId){
+
+        ArrayList<FormRegistry> list = DatabaseHelper.getRegistrysToPost(formId);
+        ArrayList<JSONObject> requests = new ArrayList<JSONObject>();
+        JSONObject jsonObject;
 
         try {
-
-            ArrayList<FormRegistry> list = DatabaseHelper.getRegistrysToPost(formId);
-            ArrayList<JSONObject> requests = new ArrayList<JSONObject>();
-            JSONObject jsonObject;
 
             for (FormRegistry form : list) {
 
@@ -54,6 +54,7 @@ public class NetworkHelper {
 
         }
 
+        return requests;
     }
 
 }

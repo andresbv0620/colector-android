@@ -72,7 +72,7 @@ public class RegistryMenuAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                NetworkHelper.buildJSONToPost(registry.getId());
+                ((BaseActivity) mContext).postJson(NetworkHelper.buildJSONToPost(registry.getId()));
 
                 /*final ProgressDialog progressDialog = new ProgressDialog(mContext);
                 progressDialog.setTitle("Updating");
