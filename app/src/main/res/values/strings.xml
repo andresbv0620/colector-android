@@ -3,6 +3,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
+    <string name="imagen_eliminar">¿Desea eliminar la imagen seleccionada?</string>
 
     <string name="error_message">Please don&quot;t leave any blank fields</string>
     <string name="error_login_top">UPS... couldn&quot;t Sign In</string>
