@@ -21,6 +21,10 @@ public class Entry {
         this.options = new ArrayList<String>();
     }
 
+    public Entry(String labelTitle){
+        this.setLabelTitle(labelTitle);
+    }
+
     public String getLabelTitle() {
         return labelTitle;
     }

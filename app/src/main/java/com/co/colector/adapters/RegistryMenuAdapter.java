@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.co.colector.R;
 import com.co.colector.activitys.BaseActivity;
+import com.co.colector.activitys.EditFormActivity;
 import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.helpers.NetworkHelper;
 import com.co.colector.model.Registry;
@@ -104,7 +105,11 @@ public class RegistryMenuAdapter extends BaseAdapter {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         if (position == 0){
-
+                            Intent editFormIntent = new Intent(mContext, EditFormActivity.class);
+                            editFormIntent.putExtra("id", registry.getId());
+                            editFormIntent.putExtra("enabled",Integer.parseInt(registry.getUpdated()) == 1);
+                            mContext.startActivity(editFormIntent);
+                            ((Activity)mContext).finish();
                         }
                         else {
                             new AlertDialog.Builder(mContext)

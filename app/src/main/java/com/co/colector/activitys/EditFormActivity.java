@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.co.colector.MapsActivity;
 import com.co.colector.R;
@@ -31,23 +30,24 @@ import com.co.colector.helpers.DatabaseHelper;
 import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.model.Catalog;
 import com.co.colector.model.Entry;
+import com.co.colector.model.FormRegistry;
+import com.co.colector.model.Registry;
 import com.co.colector.model.Tab;
 import com.co.colector.network.NetworkCalls;
 import com.co.colector.utils.ColectorConstants;
 import com.co.colector.utils.OperationWsCall;
 
 import java.io.File;
-import java.text.Normalizer;
-import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
  * Created by User on 26/08/2015.
  */
-public class FormActivity extends Activity {
+public class EditFormActivity extends Activity {
 
     private ArrayList<Tab> tabsCatalog;
     private ArrayList<Entry> entriesTab;
@@ -58,10 +58,15 @@ public class FormActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     private Uri fileUri;
     private int elementNumber = 0;
+    private int entriesAdded= 0;
     private String di = "";
+    private Intent intent;
     private String timeStamp = "";
     private File mediaStorageDir = null;
     private String idRegistroForm = "";
+    private ArrayList<FormRegistry> formsRegistry;
+    private ArrayList<Entry> entrysEdit;
+    private Boolean stateActivity = false;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     @Override
@@ -69,17 +74,36 @@ public class FormActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_form);
 
-        di = "";
-        timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        di = Environment.getExternalStorageDirectory()+"/Colector/Images"+timeStamp;
-        createPhotosDirectory();
+        intent = getIntent();
+        formsRegistry = DatabaseHelper.getRegistrysToPost(intent.getStringExtra("id"));
+        stateActivity = intent.getBooleanExtra("enabled", false);
+        entrysEdit = new ArrayList<Entry>();
+        int i = 0;
+
+        for (FormRegistry registry: formsRegistry){
+            if (Integer.parseInt(registry.getTypeEntry()) == 5) {
+                Log.i("answer / index", registry.getRespuesta()+"/"+i);
+                di = registry.getDirectoryPhoto();
+                entrysEdit.add(new Entry(""));
+            }
+            else {
+                Log.i("answer / index", registry.getRespuesta()+"/"+i);
+                entrysEdit.add(new Entry(registry.getRespuesta()));
+            }
+            i++;
+        }
+
+        DatabaseHelper.deleteRegistroForm(intent.getStringExtra("id"));
         DatabaseHelper.insertRegistroForm();
 
         idRegistroForm = DatabaseHelper.getMaxIdFromRegistry();
 
+        if (stateActivity)
+            DatabaseHelper.updateRegistroForm(idRegistroForm);
+
         ((ImageButton) findViewById(R.id.imageButtonMenu)).setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
+        @Override
+        public void onClick(View view) {
             storeForm();
             }
         });
@@ -103,18 +127,6 @@ public class FormActivity extends Activity {
         else init(ColectorConstants.catalogArrayList);
     }
 
-    private void createPhotosDirectory(){
-
-        mediaStorageDir = new File(di);
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-
-            }
-        }
-
-    }
-
     public void exitFormAlert(){
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -124,7 +136,7 @@ public class FormActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        startActivity(new Intent(FormActivity.this, BaseActivity.class));
+                        startActivity(new Intent(EditFormActivity.this, BaseActivity.class));
                         finish();
                     }
 
@@ -134,21 +146,27 @@ public class FormActivity extends Activity {
     }
 
     public void storeForm(){
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Guardar")
-                .setMessage(R.string.fin)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+       if (!stateActivity) {
+           new AlertDialog.Builder(this)
+                   .setIcon(android.R.drawable.ic_dialog_alert)
+                   .setTitle("Guardar")
+                   .setMessage(R.string.fin)
+                   .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(FormActivity.this, BaseActivity.class));
-                        finish();
-                    }
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           startActivity(new Intent(EditFormActivity.this, BaseActivity.class));
+                           finish();
+                       }
 
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
+                   })
+                   .setNegativeButton("Cancelar", null)
+                   .show();
+       }
+       else {
+           startActivity(new Intent(EditFormActivity.this, BaseActivity.class));
+           finish();
+       }
     }
 
     public void init(ArrayList<Catalog> catalogArrayList){
@@ -156,7 +174,7 @@ public class FormActivity extends Activity {
         ((ImageButton) findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FormActivity.this, MapsActivity.class));
+                startActivity(new Intent(EditFormActivity.this, MapsActivity.class));
             }
         });
 
@@ -170,7 +188,7 @@ public class FormActivity extends Activity {
         tabsCatalog = ColectorConstants.catalogSelected.getTabs();
 
         for (Tab t: tabsCatalog) {
-            Log.i("tabID",t.getTabId());
+            Log.i("tabID", t.getTabId());
             prepareView((LinearLayout) findViewById(R.id.form), t);
             elementNumber++;
         }
@@ -197,9 +215,20 @@ public class FormActivity extends Activity {
         entriesTab = tab.getEntries();
 
         int elementNumberTab = 0;
+
         for (Entry e: entriesTab) {
-            addBottomLayouts(optionsLayout, e, elementNumberTab, tab);
+
+            Entry entry;
+
+            try {
+                entry = entrysEdit.get(entriesAdded);
+            }catch (IndexOutOfBoundsException ex){
+                entry = e;
+            }
+
+            addBottomLayouts(optionsLayout, e, elementNumberTab, tab, entry);
             elementNumber++;
+            entriesAdded++;
         }
 
         parent.addView(view);
@@ -219,7 +248,7 @@ public class FormActivity extends Activity {
 
     }
 
-    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry, final int elementNumberTab, final Tab tab) {
+    private void addBottomLayouts(LinearLayout optionsLayout, final Entry entry, final int elementNumberTab, final Tab tab, final Entry editEntry) {
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.row_view, null);
@@ -240,9 +269,11 @@ public class FormActivity extends Activity {
                 editText.setSingleLine(true);
                 editText.setHint(entry.getLabelTitle());
                 editText.setPadding(10, 10, 10, 10);
-
+                editText.setText(editEntry.getLabelTitle());
+                editText.setEnabled(!stateActivity);
                 insertingData(false, tab, entry);
                 final String idUpdate = DatabaseHelper.getMaxId();
+                DatabaseHelper.updateRegistro(idUpdate, editEntry.getLabelTitle());
 
                     TextWatcher textWatcher = new TextWatcher() {
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -269,6 +300,8 @@ public class FormActivity extends Activity {
 
                     editText.addTextChangedListener(textWatcher);
 
+
+
                 mainLayout.addView(editText);
                 break;
 
@@ -282,6 +315,7 @@ public class FormActivity extends Activity {
                 button.setLayoutParams(params);
                 button.setText("Desplegar opciones");
 
+                button.setEnabled(!stateActivity);
                 final String idUpdateMultipleAlerts = DatabaseHelper.getMaxId();
 
                 button.setOnClickListener(new View.OnClickListener() {
@@ -304,6 +338,7 @@ public class FormActivity extends Activity {
                     firsButtonParams.gravity = Gravity.LEFT;
                     secondButton.setLayoutParams(firsButtonParams);
                     secondButton.setText("Desplegar opciones");
+                    secondButton.setEnabled(!stateActivity);
 
                     final String idUpdateSimpleAlerts = DatabaseHelper.getMaxId();
 
@@ -322,6 +357,7 @@ public class FormActivity extends Activity {
                 imageButton.setImageResource(R.drawable.btn_plus_photo);
                 imageButton.setBackgroundResource(0);
                 imageButton.setPadding(10, 10, 10, 10);
+                imageButton.setEnabled(!stateActivity);
 
                 insertingData(true, tab, entry);
 
@@ -340,10 +376,12 @@ public class FormActivity extends Activity {
                 buttonGallery.setPadding(10, 10, 10, 10);
                 buttonGallery.setText("Mostrar Galeria");
 
+                buttonGallery.setEnabled(!stateActivity);
+
                 buttonGallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(FormActivity.this, GridViewActivity.class);
+                        Intent intent = new Intent(EditFormActivity.this, GridViewActivity.class);
                         intent.putExtra("directory",di);
                         startActivity(intent);
                     }
@@ -354,16 +392,19 @@ public class FormActivity extends Activity {
                 break;
 
             case 6:
-                final EditText edittext = new EditText(FormActivity.this);
+                final EditText edittext = new EditText(EditFormActivity.this);
                 edittext.setMaxLines(1);
                 edittext.setBackgroundResource(R.drawable.text_line);
                 edittext.setSingleLine(true);
                 edittext.setHint(entry.getLabelTitle());
+                edittext.setText(editEntry.getLabelTitle());
                 edittext.setPadding(10, 10, 10, 10);
                 edittext.setFocusable(false);
+                edittext.setEnabled(!stateActivity);
 
                 insertingData(false, tab, entry);
                 final String idUpdateDate = DatabaseHelper.getMaxId();
+                DatabaseHelper.updateRegistro(idUpdateDate, editEntry.getLabelTitle());
 
                 final Calendar myCalendar = Calendar.getInstance();
 
@@ -389,7 +430,7 @@ public class FormActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        new DatePickerDialog(FormActivity.this, date, myCalendar
+                        new DatePickerDialog(EditFormActivity.this, date, myCalendar
                                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
                     }
@@ -405,7 +446,12 @@ public class FormActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+      if (!stateActivity)
         exitFormAlert();
+      else {
+          startActivity(new Intent(EditFormActivity.this, BaseActivity.class));
+          finish();
+      }
     }
 
     @Override

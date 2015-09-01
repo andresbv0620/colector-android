@@ -40,7 +40,7 @@ public class GridViewActivity extends Activity {
         gridView = (GridView) findViewById(R.id.grid_view);
         initilizeGridLayout();
 
-        paths = ApplicationHelper.getFilePaths(intent.getStringExtra("directory"));
+        paths = ApplicationHelper.getFilePaths(intent.getStringExtra("directory"), true);
 
         if (paths.size() != 0) {
             gridView.setAdapter(new GridViewImageAdapter(GridViewActivity.this, paths ,

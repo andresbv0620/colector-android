@@ -43,10 +43,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activitys.SurfaceViewCameraActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".activitys.FormActivity"
             android:screenOrientation="portrait" >
         </activity>
@@ -57,6 +53,11 @@
 
         <activity
             android:name=".activitys.GridViewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".activitys.EditFormActivity"
             android:screenOrientation="portrait" >
         </activity>
 

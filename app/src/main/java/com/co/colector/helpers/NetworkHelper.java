@@ -64,7 +64,7 @@ public class NetworkHelper {
                               requests.add(jsonObject);
                               break;
 
-                    case 5:  ArrayList<String> paths = ApplicationHelper.getFilePaths(form.getDirectoryPhoto());
+                    case 5:  ArrayList<String> paths = ApplicationHelper.getFilePaths(form.getDirectoryPhoto(), false);
 
                              if (paths.size() != 0){
 

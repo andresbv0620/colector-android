@@ -3,26 +3,20 @@ package com.co.colector.fragments;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.co.colector.R;
-import com.co.colector.activitys.SurfaceViewCameraActivity;
-import com.co.colector.model.Catalog;
 import com.co.colector.model.Entry;
 import com.co.colector.model.Tab;
 import com.co.colector.utils.ColectorConstants;
@@ -125,7 +119,7 @@ public class FragmentForm extends Fragment {
                     imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            startActivity(new Intent(getActivity(), SurfaceViewCameraActivity.class));
+                            //startActivity(new Intent(getActivity(), SurfaceViewCameraActivity.class));
                         }
                     });
                     mainLayout.addView(imageButton);

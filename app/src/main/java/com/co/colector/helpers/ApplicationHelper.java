@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class ApplicationHelper {
 
-    public static ArrayList<String> getFilePaths(String filesDirectory) {
+    public static ArrayList<String> getFilePaths(String filesDirectory, Boolean showAlert) {
 
         ArrayList<String> filePaths = new ArrayList<String>();
 
@@ -45,11 +45,12 @@ public class ApplicationHelper {
 
                 }
             } else {
-                // image directory is empty
-                Toast.makeText(
-                        ColectorApplication.getInstance(),
-                                "El directorio esta vacio",
-                        Toast.LENGTH_LONG).show();
+                if (showAlert) {
+                    Toast.makeText(
+                            ColectorApplication.getInstance(),
+                            "El directorio esta vacio",
+                            Toast.LENGTH_LONG).show();
+                }
             }
 
         } else {
