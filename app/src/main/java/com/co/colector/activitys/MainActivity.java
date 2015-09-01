@@ -40,16 +40,25 @@ public class MainActivity extends Activity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        networkCalls = new NetworkCalls(this);
-        enterpriseArrayList = new ArrayList<Enterprise>();
 
-        ColectorConstants.catalogSelected = null;
-        ColectorConstants.catalogArrayList = null;
+        if (!PreferencesHelper.getLoadedDataKey()) {
 
-        DatabaseHelper.getMaxId();
-                ((EditText) findViewById(R.id.editTextEmail)).setText("jcastillo@perast.cl");
-        ((EditText) findViewById(R.id.editTextPassword)).setText("123456");
-        init();
+            networkCalls = new NetworkCalls(this);
+            enterpriseArrayList = new ArrayList<Enterprise>();
+
+            ColectorConstants.catalogSelected = null;
+            ColectorConstants.catalogArrayList = null;
+
+            DatabaseHelper.getMaxId();
+            ((EditText) findViewById(R.id.editTextEmail)).setText("jcastillo@perast.cl");
+            ((EditText) findViewById(R.id.editTextPassword)).setText("123456");
+            init();
+
+        }
+        else {
+            startActivity(new Intent(MainActivity.this, ListFormsActivity.class));
+            finish();
+        }
     }
 
     private Boolean getPassOfView(){
@@ -94,6 +103,7 @@ public class MainActivity extends Activity{
 
                 PreferencesHelper.insertIdSistema(enterpriseArrayList.get(position).getId());
                 PreferencesHelper.insertBdIdSistema(enterpriseArrayList.get(position).getDb_system());
+                PreferencesHelper.setLoadedDataKey(true);
                 startActivity(new Intent(MainActivity.this, ListFormsActivity.class));
                 finish();
             }

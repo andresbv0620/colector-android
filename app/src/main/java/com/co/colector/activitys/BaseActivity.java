@@ -24,6 +24,7 @@ import com.co.colector.adapters.DrawerMenuAdapterList;
 import com.co.colector.fragments.FragmentForm;
 import com.co.colector.fragments.FragmentInitialMenu;
 import com.co.colector.helpers.DatabaseHelper;
+import com.co.colector.helpers.PreferencesHelper;
 import com.co.colector.interfaces.BaseMethodsActivity;
 import com.co.colector.model.Catalog;
 import com.co.colector.network.NetworkCalls;
@@ -162,6 +163,12 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
 
             case R.id.configuracion:
                 return true;
+
+            case R.id.cerrar_sesion:
+                                    PreferencesHelper.setLoadedDataKey(false);
+                                    startActivity(new Intent(BaseActivity.this, MainActivity.class));
+                                    finish();
+                                    return true;
         }
         return true;
     }

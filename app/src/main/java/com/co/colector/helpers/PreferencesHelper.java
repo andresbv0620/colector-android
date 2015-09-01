@@ -29,10 +29,17 @@ public class PreferencesHelper {
         editor.commit();
     }
 
+    public static void setLoadedDataKey(Boolean loadedData){
+        instanciateSharedPreferences();
+        editor = sharedPreferences.edit();
+        editor.putBoolean(loadedDataKey, loadedData);
+        editor.commit();
+    }
+
     public static void insertIdSistema(int idSistema){
         instanciateSharedPreferences();
         editor = sharedPreferences.edit();
-        editor.putInt(sistemaIdKey,idSistema);
+        editor.putInt(sistemaIdKey, idSistema);
         editor.commit();
     }
 
@@ -51,6 +58,11 @@ public class PreferencesHelper {
     public static String getDbIdSistema(){
         instanciateSharedPreferences();
         return sharedPreferences.getString(dbSistemaIdKey, "");
+    }
+
+    public static Boolean getLoadedDataKey(){
+        instanciateSharedPreferences();
+        return sharedPreferences.getBoolean(loadedDataKey, false);
     }
 
 
