@@ -42,6 +42,8 @@ public class FragmentFormsList extends Fragment {
         registryArrayList = new ArrayList<Registry>();
         catalogArrayList = ColectorConstants.catalogArrayList;
 
+        view.findViewById(R.id.imageButton).setVisibility(View.INVISIBLE);
+
         for (Catalog c: catalogArrayList){
             registryArrayList.add(new Registry(c.getCatalogTitle(),""));
         }

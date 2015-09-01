@@ -22,6 +22,7 @@ import com.co.colector.model.Registry;
 import com.co.colector.utils.ConnectionManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -73,8 +74,10 @@ public class RegistryMenuAdapter extends BaseAdapter {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ConnectionManager.isConnected())
-                    ((BaseActivity) mContext).postJson(NetworkHelper.buildJSONToPost(registry.getId()), registry.getId());
+                if (ConnectionManager.isConnected()) {
+                    ArrayList<String> idsDb = new ArrayList<String>(Arrays.asList(registry.getId()));
+                    ((BaseActivity) mContext).postJson(NetworkHelper.buildJSONToPost(registry.getId()), registry.getId(), idsDb);
+                }
                 else
                     Toast.makeText(mContext,"Se necesita conexion a red de datos o WiFi para continuar con la operacion", Toast.LENGTH_LONG).show();
             }

@@ -14,12 +14,16 @@ import android.widget.TextView;
 
 import com.co.colector.ColectorApplication;
 import com.co.colector.R;
+import com.co.colector.activitys.BaseActivity;
 import com.co.colector.activitys.FormActivity;
 import com.co.colector.adapters.RegistryMenuAdapter;
 import com.co.colector.helpers.DatabaseHelper;
+import com.co.colector.helpers.NetworkHelper;
 import com.co.colector.model.Registry;
 import com.co.colector.model.Tab;
 import com.co.colector.utils.ColectorConstants;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -61,6 +65,28 @@ public class FragmentInitialMenu extends Fragment {
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), FormActivity.class));
                 getActivity().finish();
+            }
+        });
+
+        ((ImageButton) view.findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ArrayList<ArrayList<JSONObject>> syncronizedJsons = new ArrayList<ArrayList<JSONObject>>();
+                ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<JSONObject>();
+                ArrayList<String> idsRegistrys = new ArrayList<String>();
+
+                for (Registry registry: registryArrayList)
+                    if (Integer.parseInt(registry.getUpdated()) == 0) {
+                        syncronizedJsons.add(NetworkHelper.buildJSONToPost(registry.getId()));
+                        idsRegistrys.add(registry.getId());
+                    }
+
+                for (ArrayList<JSONObject> objectArrayList: syncronizedJsons)
+                   for (JSONObject jsonObject: objectArrayList)
+                        jsonObjectArrayList.add(jsonObject);
+
+                ((BaseActivity) getActivity()).syncronizeAll(jsonObjectArrayList, idsRegistrys);
             }
         });
 

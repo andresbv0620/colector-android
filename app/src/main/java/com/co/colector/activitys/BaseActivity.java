@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.co.colector.ColectorApplication;
 import com.co.colector.R;
@@ -27,6 +28,7 @@ import com.co.colector.interfaces.BaseMethodsActivity;
 import com.co.colector.model.Catalog;
 import com.co.colector.network.NetworkCalls;
 import com.co.colector.utils.ColectorConstants;
+import com.co.colector.utils.ConnectionManager;
 import com.co.colector.utils.OperationWsCall;
 
 import org.apache.http.HttpResponse;
@@ -111,6 +113,14 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         }
     }
 
+    public void syncronizeAll(ArrayList<JSONObject> jsonObjectArrayList, ArrayList<String> idsRegistrys){
+        if (ConnectionManager.isConnected()) {
+            postJson(jsonObjectArrayList, null, idsRegistrys);
+        }
+        else
+            Toast.makeText(this, "Se necesita conexion a red de datos o WiFi para continuar con la operacion", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void buildMenu(ListView listView) {
         listView.setAdapter(new DrawerMenuAdapterList(this, catalogArrayList));
@@ -163,7 +173,7 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
         finish();
     }
 
-    public void postJson(final ArrayList<JSONObject> jsonObjects, final String idUpdate){
+    public void postJson(final ArrayList<JSONObject> jsonObjects, final String idUpdate, final ArrayList<String> databaseIds){
 
         //TODO - Refactor all this code piece.
 
@@ -210,7 +220,14 @@ public class BaseActivity extends FragmentActivity implements BaseMethodsActivit
 
             @Override
             protected void onPostExecute(String s) {
-                DatabaseHelper.updateRegistroForm(idUpdate);
+
+                if (idUpdate != null)
+                    DatabaseHelper.updateRegistroForm(idUpdate);
+                else {
+                    for (String id: databaseIds)
+                        DatabaseHelper.updateRegistroForm(id);
+                }
+
                 progressDialog.dismiss();
                 startActivity(new Intent(BaseActivity.this, BaseActivity.class));
                 finish();
