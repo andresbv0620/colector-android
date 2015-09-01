@@ -76,6 +76,7 @@ public class MainActivity extends Activity{
     }
 
     public void showEnterpriseDialog(){
+
         names = new String[enterpriseArrayList.size()];
         fillNames();
         alertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -124,6 +125,7 @@ public class MainActivity extends Activity{
                             getString(R.string.please_take_a_moment),
                             true);
 
+                    enterpriseArrayList = new ArrayList<Enterprise>();
                     ColectorConstants.username = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
                     ColectorConstants.password = ((EditText) findViewById(R.id.editTextPassword)).getText().toString();
 
