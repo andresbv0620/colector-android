@@ -109,6 +109,21 @@ public class DatabaseHelper {
         registroFormTable.updateValues(sqLiteDatabase, id);
     }
 
+    public static void deleteRegistroForm(String id){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        registroFormTable = new registro_form();
+        registroFormTable.deleteRecord(sqLiteDatabase,id);
+        deleteRegistro(id);
+    }
+
+    private static void deleteRegistro(String id){
+        initializeDatabase();
+        initializeWriteableDatabase();
+        registrosTable = new registros();
+        registrosTable.deleteRecord(sqLiteDatabase,id);
+    }
+
     public static ArrayList<Registry> getRegistrysOfForms(Catalog catalog){
 
         initializeDatabase();

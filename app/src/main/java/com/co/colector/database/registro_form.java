@@ -46,5 +46,12 @@ public class registro_form {
         db.close();
     }
 
-    public void delete(SQLiteDatabase db){ db.delete(TABLE_NAME,null,null); }
+    public void delete(SQLiteDatabase db){ db.delete(TABLE_NAME, null, null); }
+
+    public void deleteRecord(SQLiteDatabase db, String id){
+        String whereClause = "id" + "=?";
+        String[] whereArgs = new String[] { String.valueOf(id) };
+        db.delete(TABLE_NAME, whereClause, whereArgs);
+        db.close();
+    }
 }

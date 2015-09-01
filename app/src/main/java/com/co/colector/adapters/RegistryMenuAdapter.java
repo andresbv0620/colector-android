@@ -1,16 +1,21 @@
 package com.co.colector.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Network;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +26,7 @@ import com.co.colector.helpers.NetworkHelper;
 import com.co.colector.model.Registry;
 import com.co.colector.utils.ConnectionManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +76,65 @@ public class RegistryMenuAdapter extends BaseAdapter {
                 .findViewById(R.id.textViewTiempoActualizacion);
 
         final ImageButton imageButton = (ImageButton) view.findViewById(R.id.imageButtonActualizar);
+        final ImageButton menuOptions = (ImageButton) view.findViewById(R.id.imageButtonPopUpMapa);
+
+        menuOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder alertDialog;
+                final AlertDialog alert;
+                LayoutInflater inflater;
+                View convertView;
+                String[] names = {"Editar", "Eliminar"};
+
+                alertDialog = new AlertDialog.Builder(mContext);
+                inflater = ((Activity)mContext).getLayoutInflater();
+                convertView = (View) inflater.inflate(R.layout.list, null);
+                alertDialog.setView(convertView);
+                alertDialog.setTitle("Seleccionar accion");
+
+                ((ListView) convertView.findViewById(R.id.lv)).
+                        setAdapter(new ArrayAdapter<String>(mContext, R.layout.mytextview, names));
+
+                alert = alertDialog.create();
+                alert.show();
+
+                ((ListView) convertView.findViewById(R.id.lv)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        if (position == 0){
+
+                        }
+                        else {
+                            new AlertDialog.Builder(mContext)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setMessage(R.string.registro_eliminar)
+                                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            alert.dismiss();
+                                            dialog.dismiss();
+                                            DatabaseHelper.deleteRegistroForm(registry.getId());
+                                            mContext.startActivity(new Intent(mContext, BaseActivity.class));
+                                            Toast.makeText(mContext,"El registro fue eliminado exitosamente", Toast.LENGTH_LONG).show();
+                                            ((Activity)mContext).finish();
+                                        }
+
+                                    })
+                                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            alert.dismiss();
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                });
+            }
+        });
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
